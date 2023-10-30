@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuikGraph" Version="2.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GraphX.Core.Controls">
+      <HintPath>Libs\GraphX.Core.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.Standard.Common">
+      <HintPath>Libs\GraphX.Standard.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.Standard.Logic">
+      <HintPath>Libs\GraphX.Standard.Logic.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
