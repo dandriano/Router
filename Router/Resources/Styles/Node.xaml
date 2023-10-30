@@ -21,7 +21,19 @@
                                  StrokeThickness="{TemplateBinding BorderThickness}"
                                  StrokeDashArray="4 2"
                                  StrokeDashCap="Round" />
-                        <graph:VertexLabelControl LabelPositionMode="Sides" 
+                        <StackPanel x:Name="PART_vcproot" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border Width="20"
+                                Height="20"
+                                CornerRadius="20"
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Margin="2,2,0,2" 
+                                Padding="0">
+                                <graph:StaticVertexConnectionPoint Id="1" />
+                            </Border>
+                        </StackPanel>
+                        <graph:VertexLabelControl x:Name="PART_vertexLabel"
+                                                  LabelPositionMode="Sides" 
                                                   LabelPositionSide="Top" 
                                                   Content="{Binding Vertex.Name, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>

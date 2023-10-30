@@ -1,9 +1,7 @@
 ﻿using GraphX.Common.Enums;
 using GraphX.Controls;
-using GraphX.Controls.Models;
 using GraphX.Logic.Models;
 using Router.Model;
-using System;
 using System.Windows;
 
 namespace Router.ViewModels
@@ -12,8 +10,6 @@ namespace Router.ViewModels
     {
         public GraphViewModel()
         {
-            VertexLabelFactory = new DefaultVertexlabelFactory();
-
             var graph = new Graph();
             var logicCore = new GXLogicCore<Node, Link, Graph>(graph)
             {
@@ -26,24 +22,31 @@ namespace Router.ViewModels
             logicCore.DefaultOverlapRemovalAlgorithmParams.VerticalGap = 50;
 
             SetLogicCore(logicCore);
-
             GenerateGraph(graph);
-
-            SetVerticesDrag(true);
+            SetVerticesDrag(true, true);
+            SetEdgesDrag(true);
             SetVerticesHighlight(true, GraphControlType.VertexAndEdge);
-            ShowAllEdgesArrows(true);
             SetEdgesHighlight(true, GraphControlType.VertexAndEdge);
+            ShowAllEdgesArrows(true);
+
+            /*
+            var n1 = AddNode(1, "#1 Node", new Point(25, 25));
+            var n2 = AddNode(2, "#2 Node", new Point(100, 100));
+            var e = AddLink(n1, n2);
+            */
         }
 
-        public Node AddNode(long id, string name)
+        public Node AddNode(long id, string name, Point pos)
         {
-            var rnd = new Random();
-            var position = new Point(rnd.Next(150), rnd.Next(150));
-
             var node = new Node(id, name);
             var nodeControl = new VertexControl(node);
-
-            nodeControl.SetPosition(position);
+            /*
+            var vcp = new StaticVertexConnectionPoint() { Id = 1 };
+            var ctl = new Border() { Child = vcp };
+            nodeControl.VCPRoot.Children.Add(ctl);
+            nodeControl.VertexConnectionPointsList.Add(vcp);
+            */
+            nodeControl.SetPosition(pos);
             AddVertexAndData(node, nodeControl);
 
             return node;
@@ -56,8 +59,7 @@ namespace Router.ViewModels
 
             var link = new Link(source, target, weight);
             var linkControl = new EdgeControl(sourceControl, targetControl, link);
-
-            AddEdgeAndData(link, linkControl);
+            AddEdgeAndData(link, linkControl, true);
 
             return link;
         }
