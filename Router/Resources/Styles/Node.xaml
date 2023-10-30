@@ -3,10 +3,10 @@
                     xmlns:graph="http://schemas.panthernet.ru/graphx/">
 
     <Style TargetType="{x:Type graph:VertexControl}">
-        <Setter Property="Background" Value="#FFE3E3E3"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="5"/>
         <Setter Property="Padding" Value="10,5,10,5"/>
-        <Setter Property="BorderBrush" Value="#FF393939"/>
+        <Setter Property="BorderBrush" Value="Gray"/>
         <Setter Property="VertexShape" Value="Circle"/>
         <Setter Property="ShowLabel" Value="True"/>
 
@@ -14,14 +14,16 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type graph:VertexControl}">
                     <Grid>
-                        <Border Width="200"
-                                Height="200"
-                                BorderBrush="Black"
-                                BorderThickness="1"
-                                CornerRadius="200">
-                            <graph:VertexLabelControl Content="{Binding Vertex.Name, RelativeSource={RelativeSource TemplatedParent},
-                                                      UpdateSourceTrigger=PropertyChanged}"/>
-                        </Border>
+                        <Ellipse Width="100"
+                                 Height="100"
+                                 Fill="{TemplateBinding Background}"
+                                 Stroke="{TemplateBinding BorderBrush}"
+                                 StrokeThickness="{TemplateBinding BorderThickness}"
+                                 StrokeDashArray="4 2"
+                                 StrokeDashCap="Round" />
+                        <graph:VertexLabelControl LabelPositionMode="Sides" 
+                                                  LabelPositionSide="Top" 
+                                                  Content="{Binding Vertex.Name, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -29,29 +31,9 @@
 
         <Style.Triggers>
             <Trigger Property="graph:HighlightBehaviour.Highlighted" Value="True">
-                <Setter Property="Background" Value="Gold"/>
+                <Setter Property="BorderBrush" Value="Gold"/>
                 <Setter Property="BorderThickness" Value="7"/>
             </Trigger>
         </Style.Triggers>
-    </Style>
-
-    <Style TargetType="graph:AttachableVertexLabelControl">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="Black"/>
-        <Setter Property="LabelPositionMode" Value="Sides"/>
-        <Setter Property="LabelPositionSide" Value="Bottom"/>
-
-        <!-- Custom label template body -->
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="graph:AttachableVertexLabelControl">
-                    <Grid>
-                        <TextBlock VerticalAlignment="Center" 
-                                           HorizontalAlignment="Center"
-                                           Text="{Binding AttachNode.Vertex.Name, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 </ResourceDictionary>
