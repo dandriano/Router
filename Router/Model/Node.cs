@@ -4,7 +4,7 @@ namespace Router.Model
 {
     public class Node : VertexBase
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public bool IsInRoute { get; set; }
         public bool IsOutRoute { get; set; }
 

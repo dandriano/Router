@@ -11,10 +11,38 @@
     <UserControl.DataContext>
         <vm:GraphViewModel />
     </UserControl.DataContext>
-    
+
     <Grid>
-        <Grid>
-            <graph:ZoomControl graph:ZoomControl.ViewFinderVisibility="Collapsed" Content="{Binding}" />
-        </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+            <Border Name="NewNodeDragSource">
+                <StackPanel>
+                    <TextBlock Text="New Node" FontSize="11" HorizontalAlignment="Center"/>
+                    <Grid>
+                        <Ellipse Width="100"
+                                 Height="100"
+                                 Fill="Transparent"
+                                 Stroke="Gray"
+                                 StrokeThickness="1"
+                                 StrokeDashArray="4 2"
+                                 StrokeDashCap="Round" />
+                        <Border Width="20"
+                                Height="20"
+                                CornerRadius="20"
+                                BorderBrush="Gray" 
+                                BorderThickness="1" 
+                                Margin="2,2,0,2" 
+                                Padding="0">
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </DockPanel>
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5"/>
+        <graph:ZoomControl Grid.Column="2" Name="GraphArea" graph:ZoomControl.ViewFinderVisibility="Collapsed" Content="{Binding}" />
     </Grid>
 </UserControl>
