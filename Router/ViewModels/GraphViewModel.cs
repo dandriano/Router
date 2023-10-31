@@ -4,11 +4,15 @@ using GraphX.Controls.Models;
 using GraphX.Logic.Models;
 using Router.Model;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Router.ViewModels
 {
     public class GraphViewModel : GraphArea<Node, Link, Graph>
     {
+        private PendingLink PendingLink;
+
         public GraphViewModel()
         {
             var graph = new Graph();
@@ -30,28 +34,11 @@ namespace Router.ViewModels
             SetEdgesHighlight(true, GraphControlType.VertexAndEdge);
             ShowAllEdgesArrows(true);
 
-            VertexDoubleClick += ProceedVertexPointDoubleClick;
-            // Uncomment for pre-creation of node pairs with link
-            /*
-            var n1 = AddNode(1, "#1 Node", new Point(25, 25));
-            var n2 = AddNode(2, "#2 Node", new Point(100, 100));
-            // var n3 = AddNode(3, "#3 Node", new Point(200, 200));
-            var e = AddLink(n1, n2);
-            */
-            
+            VertexDoubleClick += StartPendingLink;
+            MouseMove += MovePendingLink;
+            VertexClicked += FinishPendingLink;
         }
-
-        private void ProceedVertexPointDoubleClick(object sender, VertexSelectedEventArgs args)
-        {
-            var nodeControl = args.VertexControl;
-            var point = nodeControl.GetConnectionPointAt(args.MouseArgs.GetPosition(this));
-
-            if (point != null)
-            {
-                // TODO: Add dynamic link creation on dblclick
-            }
-        }
-
+        #region [Add Node/Link]
         public Node AddNode(long id, string name, Point pos)
         {
             var node = new Node(id, name);
@@ -77,5 +64,50 @@ namespace Router.ViewModels
 
             return link;
         }
+        #endregion
+        #region [Add PendingLink]
+        private void StartPendingLink(object sender, VertexSelectedEventArgs args)
+        {
+            if (PendingLink != default) return;
+            var nodeControl = args.VertexControl;
+            var pos = args.MouseArgs.GetPosition(this);
+            var point = nodeControl.GetConnectionPointAt(pos);
+
+            if (point != null)
+            {
+                PendingLink = new PendingLink(nodeControl, point, pos, new SolidColorBrush(Colors.Blue));
+                InsertCustomChildControl(0, PendingLink.LinkPath);
+            }
+        }
+
+        private void MovePendingLink(object sender, MouseEventArgs e)
+        {
+            if (PendingLink == default) return;
+            var pos = e.GetPosition(this);
+            PendingLink.UpdateTargetPosition(pos);
+        }
+
+        private void FinishPendingLink(object sender, VertexClickedEventArgs args)
+        {
+            if (PendingLink == default) return;
+            if (args.MouseArgs.ChangedButton != MouseButton.Right) return;
+
+            var nodeControl = args.Control;
+            var pos = args.MouseArgs.GetPosition(this);
+            var point = nodeControl.GetConnectionPointAt(pos);
+
+            if (point != null)
+            {
+                var source = (Node)PendingLink.Source.Vertex;
+                var target = (Node)nodeControl.Vertex;
+
+                RemoveCustomChildControl(PendingLink.LinkPath);
+                PendingLink.Dispose();
+                PendingLink = null;
+
+                AddLink(source, target);
+            }
+        }
+        #endregion
     }
 }
