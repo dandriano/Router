@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using Router.Enums;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Router.Views
 {
@@ -12,12 +14,17 @@ namespace Router.Views
         {
             InitializeComponent();
             NewNodeDragSource.PreviewMouseLeftButtonDown += NewNodeDragSource_PreviewMouseLeftButtonDown;
+            NewLinkDragSource.PreviewMouseLeftButtonDown += NewLinkDragSource_PreviewMouseLeftButtonDown;
         }
 
-        private void NewNodeDragSource_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void NewLinkDragSource_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var data = new DataObject(typeof(object), new object());
-            DragDrop.DoDragDrop(NewNodeDragSource, data, DragDropEffects.Link);
+            DragDrop.DoDragDrop(NewLinkDragSource, EnumStencilDragType.Link, DragDropEffects.Link);
+        }
+
+        private void NewNodeDragSource_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragDrop.DoDragDrop(NewNodeDragSource, EnumStencilDragType.Node, DragDropEffects.Link);
         }
     }
 }
