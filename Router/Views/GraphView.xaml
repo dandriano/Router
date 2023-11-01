@@ -17,12 +17,16 @@
     </i:Interaction.Triggers>
     
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Orientation="Vertical">
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
             <Border Name="NewNodeDragSource">
                 <StackPanel>
                     <TextBlock Text="New Node" FontSize="11" HorizontalAlignment="Center"/>
@@ -77,7 +81,26 @@
             </Border>
             <Separator />
         </StackPanel>
-        <Separator Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        <Separator Grid.Row="0" Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
         <graph:ZoomControl Grid.Column="2" Name="GraphArea" graph:ZoomControl.ViewFinderVisibility="Collapsed" Content="{Binding GraphController}" />
+        <StatusBar Grid.Row="1"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
+                   VerticalAlignment="Bottom" 
+                   Background="Beige" >
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Node count:    "/>
+                    <TextBlock Text="{Binding Nodes.Count}"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Link count:    "/>
+                    <TextBlock Text="{Binding Links.Count}"/>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </UserControl>
