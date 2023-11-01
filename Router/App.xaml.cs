@@ -1,11 +1,32 @@
-﻿using System.Windows;
+﻿using Prism.DryIoc;
+using Prism.Ioc;
+using Prism.Mvvm;
+using Router.Controllers;
+using Router.Interfaces;
+using Router.ViewModels;
+using Router.Views;
+using System.Windows;
+
 
 namespace Router
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
+        protected override Window CreateShell()
+        {
+            return Container.Resolve<MainWindow>();
+        }
+
+        protected override void ConfigureViewModelLocator()
+        {
+            base.ConfigureViewModelLocator();
+
+            ViewModelLocationProvider.Register<GraphView, GraphViewModel>();
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterSingleton<IGraphController, GraphController>();
+        }
     }
 }

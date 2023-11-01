@@ -3,22 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:vm="clr-namespace:Router.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
              xmlns:graph="http://schemas.panthernet.ru/graphx/"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <UserControl.DataContext>
-        <vm:GraphViewModel />
-    </UserControl.DataContext>
-
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding InitializeController}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Column="0">
+        <StackPanel Grid.Column="0" Orientation="Vertical">
             <Border Name="NewNodeDragSource">
                 <StackPanel>
                     <TextBlock Text="New Node" FontSize="11" HorizontalAlignment="Center"/>
@@ -41,8 +45,34 @@
                     </Grid>
                 </StackPanel>
             </Border>
-        </DockPanel>
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5"/>
-        <graph:ZoomControl Grid.Column="2" Name="GraphArea" graph:ZoomControl.ViewFinderVisibility="Collapsed" Content="{Binding}" />
+            <Separator />
+            <Border Name="NewLinkDragSource">
+                <StackPanel>
+                    <TextBlock Text="New Link" FontSize="11" HorizontalAlignment="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Path Grid.Column="0"
+                              Width="10"
+                              Height="10"
+                              Data="M0,0.5 L1,1 1,0"
+                              Fill="Black"
+                              Stretch="Uniform" />
+                        <Path Grid.Column="1"
+                              Stroke="Black"
+                              StrokeThickness="2" Height="100">
+                            <Path.Data>
+                                <LineGeometry StartPoint="0,50" EndPoint="90,50" />
+                            </Path.Data>
+                        </Path>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Separator />
+        </StackPanel>
+        <Separator Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        <graph:ZoomControl Grid.Column="2" Name="GraphArea" graph:ZoomControl.ViewFinderVisibility="Collapsed" Content="{Binding GraphController}" />
     </Grid>
 </UserControl>

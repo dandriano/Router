@@ -23,10 +23,10 @@
                               StrokeThickness="2" />
                         <graph:DefaultEdgePointer x:Name="PART_EdgePointerForTarget" NeedRotation="true">
                             <Path Width="10"
-                            Height="10"
-                            Data="M0,0.5 L1,1 1,0"
-                            Fill="{TemplateBinding Foreground}"
-                            Stretch="Uniform" />
+                                  Height="10"
+                                  Data="M0,0.5 L1,1 1,0"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform" />
                         </graph:DefaultEdgePointer>
                     </Grid>
                 </ControlTemplate>
