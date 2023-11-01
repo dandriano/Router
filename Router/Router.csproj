@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="QuikGraph" Version="2.5.0" />
   </ItemGroup>
 
@@ -21,5 +23,4 @@
       <HintPath>Libs\GraphX.Standard.Logic.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

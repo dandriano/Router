@@ -8,7 +8,7 @@ namespace Router.Model
 {
     public class Graph : BidirectionalGraph<Node, Link>
     {
-        #region [Маршрутизация]
+        #region [Routing]
         public IEnumerable<IEnumerable<Link>> CalculateByYen(Node startingRoot, Node target, int maxRouteCount = 10)
         {
             // создаем массив для маршрутов
@@ -50,7 +50,7 @@ namespace Router.Model
                     // Удаляем ребра, которые являются частью предыдущих маршрутов
                     foreach (var path in edgeRoutes)
                     {
-                        if ((i == 0) || rootPath.Select(edge => edge.ID)
+                        if (i == 0 || rootPath.Select(edge => edge.ID)
                             .SequenceEqual(path.Take(i).Select(edge => edge.ID)))
                         {
                             infiniteEdges.AddRange(Edges.Where(edge => edge.ID == path[i].ID));
@@ -80,7 +80,7 @@ namespace Router.Model
 
                         foreach (var edge in Edges)
                         {
-                            if ((!infiniteEdges.Contains(edge)) && (reachedVertices.Contains(edge.Source) || reachedVertices.Contains(edge.Target)))
+                            if (!infiniteEdges.Contains(edge) && (reachedVertices.Contains(edge.Source) || reachedVertices.Contains(edge.Target)))
                             {
                                 infiniteEdges.Add(edge);
                             }
@@ -94,7 +94,7 @@ namespace Router.Model
                     {
                         var totalPath = rootPath == default ? spurPath.ToList() : rootPath.Concat(spurPath).ToList();
 
-                        if ((spurRoutes != default) && !spurRoutes.Contains(totalPath))
+                        if (spurRoutes != default && !spurRoutes.Contains(totalPath))
                         {
                             spurRoutes.Add(totalPath);
                         }
@@ -102,7 +102,7 @@ namespace Router.Model
                 }
 
                 // Условие для случая, когда альтернативные spur маршруты не найдены или закончились варианты для альтернативы
-                if ((spurRoutes == default) || (spurRoutes.Count == 0))
+                if (spurRoutes == default || spurRoutes.Count == 0)
                 {
                     break;
                 }
@@ -136,12 +136,12 @@ namespace Router.Model
                                                             !reachedVertices.Contains(vertex)).ToList();
 
             //случай отсутствия обязательных к посещению узлов (кроме начального и конечного) обрабатываем отдельно
-            if ((toReachList == default) || (toReachList.Count == 0))
+            if (toReachList == default || toReachList.Count == 0)
             {
                 // массив обесконеченных ребер(в начале туда попадают ребра непосещаемых узлов)
                 var infiniteEdges = Edges.Where(e =>
-                                                                ((startingInfiniteEdges != default) &&
-                                                                startingInfiniteEdges.Contains(e)) ||
+                                                                startingInfiniteEdges != default &&
+                                                                startingInfiniteEdges.Contains(e) ||
                                                                 e.Source.IsOutRoute ||
                                                                 e.Target.IsOutRoute)
                                                                 .ToList();
@@ -164,8 +164,8 @@ namespace Router.Model
 
                 //массив обесконеченных ребер (в начале туда попадают ребра непосещаемых узлов и ребра target)
                 var infiniteEdges = Edges.Where(e =>
-                                                    ((startingInfiniteEdges != default) &&
-                                                    startingInfiniteEdges.Contains(e)) ||
+                                                    startingInfiniteEdges != default &&
+                                                    startingInfiniteEdges.Contains(e) ||
                                                     e.Source.IsOutRoute ||
                                                     e.Target.IsOutRoute ||
                                                     e.Source.ID == target.ID ||
@@ -178,7 +178,7 @@ namespace Router.Model
                 bool pathExists = true;
 
                 // поочередно посещаем все обязательные вершины
-                while ((toReach.Count > 0) && pathExists)
+                while (toReach.Count > 0 && pathExists)
                 {
                     var nearReachRoute = GetNextReachPointRoute(toReach, ref root, infiniteEdges);
 
@@ -220,7 +220,7 @@ namespace Router.Model
                 }
             }
 
-            if ((routes == default) || (routes.Count == 0))
+            if (routes == default || routes.Count == 0)
             {
                 return default;
             }
@@ -245,7 +245,7 @@ namespace Router.Model
             //временно обесконечиваем ребра всех вершин в toReach, кроме первой
             foreach (var edge in Edges)
             {
-                if ((toReach.Count > 1) && (toReach.Skip(1).Contains(edge.Source) || toReach.Skip(1).Contains(edge.Target)))
+                if (toReach.Count > 1 && (toReach.Skip(1).Contains(edge.Source) || toReach.Skip(1).Contains(edge.Target)))
                 {
                     temporarilyInfiniteEdges.Add(edge);
                 }
@@ -257,8 +257,8 @@ namespace Router.Model
             TryFunc<Node, IEnumerable<Link>> getDijkstraPath = this
                 .ShortestPathsDijkstra(e =>
                                             infiniteEdges.Contains(e) ||
-                                            ((temporarilyInfiniteEdges != default) &&
-                                            temporarilyInfiniteEdges.Contains(e))
+                                            temporarilyInfiniteEdges != default &&
+                                            temporarilyInfiniteEdges.Contains(e)
                                             ? double.PositiveInfinity
                                             : e.Weight, root);
 
@@ -291,7 +291,7 @@ namespace Router.Model
 
                     foreach (Link edge in Edges)
                     {
-                        if ((!infiniteEdges.Contains(edge)) && (reachedVertices.Contains(edge.Source) || reachedVertices.Contains(edge.Target)))
+                        if (!infiniteEdges.Contains(edge) && (reachedVertices.Contains(edge.Source) || reachedVertices.Contains(edge.Target)))
                         {
                             infiniteEdges.Add(edge);
                         }
