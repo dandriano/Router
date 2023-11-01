@@ -42,8 +42,8 @@ namespace Router.Controllers
             VertexClicked += FinishPendingLink;
 
             (Parent as ZoomControl).AllowDrop = true;
-            (Parent as ZoomControl).PreviewDrop += NewNodePreviewDrop;
-            (Parent as ZoomControl).DragEnter += NewNodeDragEnter;
+            (Parent as ZoomControl).PreviewDrop += NewElementPreviewDrop;
+            (Parent as ZoomControl).DragEnter += NewElementDragEnter;
             (Parent as ZoomControl).MouseMove += MovePendingLink;
 
             GenerateGraph(LogicCore.Graph);
@@ -76,6 +76,14 @@ namespace Router.Controllers
         }
         #endregion
         #region [Add PendingLink]
+        private void InitPendingLink(VertexControl nodeControl, IVertexConnectionPoint point, Point pos)
+        {
+            if (point != null)
+            {
+                PendingLink = new PendingLink(nodeControl, point, pos, new SolidColorBrush(Colors.Blue));
+                InsertCustomChildControl(0, PendingLink.LinkPath);
+            }
+        }
         private void StartPendingLink(object sender, VertexSelectedEventArgs args)
         {
             if (PendingLink != default) return;
@@ -83,11 +91,7 @@ namespace Router.Controllers
             var pos = args.MouseArgs.GetPosition(Parent as ZoomControl);
             var point = nodeControl.GetConnectionPointAt(pos);
 
-            if (point != null)
-            {
-                PendingLink = new PendingLink(nodeControl, point, pos, new SolidColorBrush(Colors.Blue));
-                InsertCustomChildControl(0, PendingLink.LinkPath);
-            }
+            InitPendingLink(nodeControl, point, pos);
         }
 
         private void MovePendingLink(object sender, MouseEventArgs e)
@@ -119,22 +123,43 @@ namespace Router.Controllers
             }
         }
         #endregion
-        #region [Add Node From "Stencils" callbacks]
-        private void NewNodeDragEnter(object sender, DragEventArgs e)
+        #region [Add Node/Link From "Stencils" callbacks]
+        private void NewElementDragEnter(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(typeof(object)) || sender == e.Source)
+            if (!e.Data.GetDataPresent(typeof(Enums.EnumStencilDragType)) || sender == e.Source)
             {
                 e.Effects = DragDropEffects.None;
             }
         }
 
-        private void NewNodePreviewDrop(object sender, DragEventArgs e)
+        private void NewElementPreviewDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(typeof(object))) return;
+            if (!e.Data.GetDataPresent(typeof(Enums.EnumStencilDragType))) return;
+            var whatDrop = (Enums.EnumStencilDragType)e.Data.GetData(typeof(Enums.EnumStencilDragType));
+            var pos = e.GetPosition(this);
 
-            var pos = e.GetPosition(Parent as ZoomControl);
-            var id = VertexList.Count + 1;
-            AddNode(id, $"#{id} Node", pos.X, pos.Y);
+            switch (whatDrop)
+            {
+                case Enums.EnumStencilDragType.None:
+                    break;
+                case Enums.EnumStencilDragType.Node:
+                    {
+                        var id = GetNextUniqueId(true);
+                        AddNode(id, $"#{id} Node", pos.X, pos.Y);
+                    }
+                    break;
+                case Enums.EnumStencilDragType.Link:
+                    var nodeControl = GetVertexControlAt(pos);
+                    if (nodeControl == null)
+                    {
+                        var id = GetNextUniqueId(true);
+                        var newNode = AddNode(id, $"#{id} Node", pos.X, pos.Y);
+                        nodeControl = VertexList[newNode];
+                    }
+                    var point = nodeControl.GetConnectionPointById(1);
+                    InitPendingLink(nodeControl, point, pos);
+                    break;
+            }
         }
         #endregion
     }

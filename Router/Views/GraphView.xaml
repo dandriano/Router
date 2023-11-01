@@ -54,6 +54,11 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <Rectangle Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Width="100"
+                                   Height="100"
+                                   Fill="Transparent"/>
                         <Path Grid.Column="0"
                               Width="10"
                               Height="10"
