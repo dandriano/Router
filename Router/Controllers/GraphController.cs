@@ -39,15 +39,16 @@ namespace Router.Controllers
             ShowAllEdgesArrows(true);
 
             VertexDoubleClick += StartPendingLink;
-            VertexClicked += FinishPendingLink;
 
             (Parent as ZoomControl).AllowDrop = true;
             (Parent as ZoomControl).PreviewDrop += NewElementPreviewDrop;
             (Parent as ZoomControl).DragEnter += NewElementDragEnter;
             (Parent as ZoomControl).MouseMove += MovePendingLink;
+            (Parent as ZoomControl).MouseRightButtonDown += FinishPendingLink;
 
             GenerateGraph(LogicCore.Graph);
         }
+
         #region [Add Node/Link]
         public Node AddNode(long id, string name, double x, double y)
         {
@@ -101,14 +102,24 @@ namespace Router.Controllers
             PendingLink.UpdateTargetPosition(pos);
         }
 
-        private void FinishPendingLink(object sender, VertexClickedEventArgs args)
+        private void FinishPendingLink(object sender, MouseButtonEventArgs e)
         {
             if (PendingLink == default) return;
-            if (args.MouseArgs.ChangedButton != MouseButton.Right) return;
-
-            var nodeControl = args.Control;
-            var pos = args.MouseArgs.GetPosition(this);
-            var point = nodeControl.GetConnectionPointAt(pos);
+            if (e.ChangedButton != MouseButton.Right) return;
+            var pos = e.GetPosition(Parent as ZoomControl);
+            var nodeControl = GetVertexControlAt(pos);
+            IVertexConnectionPoint point;
+            if (nodeControl == null)
+            {
+                var id = GetNextUniqueId(true);
+                var newNode = AddNode(id, $"#{id} Node", pos.X, pos.Y);
+                nodeControl = VertexList[newNode];
+                point = nodeControl.GetConnectionPointById(1);
+            }
+            else
+            {
+                point = nodeControl.GetConnectionPointAt(pos);
+            }
 
             if (point != null)
             {
