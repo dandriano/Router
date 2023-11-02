@@ -4,6 +4,7 @@ using GraphX.Controls.Models;
 using GraphX.Logic.Models;
 using Router.Interfaces;
 using Router.Model;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -39,6 +40,7 @@ namespace Router.Controllers
             ShowAllEdgesArrows(true);
 
             VertexDoubleClick += StartPendingLink;
+            VertexClicked += FinishPendingLink;
 
             (Parent as ZoomControl).AllowDrop = true;
             (Parent as ZoomControl).PreviewDrop += NewElementPreviewDrop;
@@ -102,24 +104,37 @@ namespace Router.Controllers
             PendingLink.UpdateTargetPosition(pos);
         }
 
+        private void FinishPendingLink(object sender, VertexClickedEventArgs args)
+        {
+            if (PendingLink == default) return;
+            if (args.MouseArgs.ChangedButton != MouseButton.Right) return;
+
+            var nodeControl = args.Control;
+            var pos = args.MouseArgs.GetPosition(this);
+            var point = nodeControl.GetConnectionPointAt(pos);
+
+            if (point != null)
+            {
+                var source = (Node)PendingLink.Source.Vertex;
+                var target = (Node)nodeControl.Vertex;
+
+                RemoveCustomChildControl(PendingLink.LinkPath);
+                PendingLink.Dispose();
+                PendingLink = null;
+
+                AddLink(source, target);
+            }
+        }
+
         private void FinishPendingLink(object sender, MouseButtonEventArgs e)
         {
             if (PendingLink == default) return;
             if (e.ChangedButton != MouseButton.Right) return;
             var pos = e.GetPosition(Parent as ZoomControl);
-            var nodeControl = GetVertexControlAt(pos);
-            IVertexConnectionPoint point;
-            if (nodeControl == null)
-            {
-                var id = GetNextUniqueId(true);
-                var newNode = AddNode(id, $"#{id} Node", pos.X, pos.Y);
-                nodeControl = VertexList[newNode];
-                point = nodeControl.GetConnectionPointById(1);
-            }
-            else
-            {
-                point = nodeControl.GetConnectionPointAt(pos);
-            }
+            var id = GetNextUniqueId(true);
+            var newNode = AddNode(id, $"#{id} Node", pos.X, pos.Y);
+            var nodeControl = VertexList[newNode];
+            var point = nodeControl.GetConnectionPointById(1);
 
             if (point != null)
             {
