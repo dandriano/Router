@@ -3,19 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:controls="clr-namespace:Router.Controls"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:graph="http://schemas.panthernet.ru/graphx/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding InitializeController}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -26,63 +19,22 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-            <Border Name="NewNodeDragSource">
-                <StackPanel>
-                    <TextBlock Text="New Node" FontSize="11" HorizontalAlignment="Center"/>
-                    <Grid>
-                        <Ellipse Width="100"
-                                 Height="100"
-                                 Fill="Transparent"
-                                 Stroke="Gray"
-                                 StrokeThickness="1"
-                                 StrokeDashArray="4 2"
-                                 StrokeDashCap="Round" />
-                        <Border Width="20"
-                                Height="20"
-                                CornerRadius="20"
-                                BorderBrush="Gray" 
-                                BorderThickness="1" 
-                                Margin="2,2,0,2" 
-                                Padding="0">
-                        </Border>
-                    </Grid>
-                </StackPanel>
-            </Border>
-            <Separator />
-            <Border Name="NewLinkDragSource">
-                <StackPanel>
-                    <TextBlock Text="New Link" FontSize="11" HorizontalAlignment="Center"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Grid.Column="0"
-                                   Grid.ColumnSpan="2"
-                                   Width="100"
-                                   Height="100"
-                                   Fill="Transparent"/>
-                        <Path Grid.Column="0"
-                              Width="10"
-                              Height="10"
-                              Data="M0,0.5 L1,1 1,0"
-                              Fill="Black"
-                              Stretch="Uniform" />
-                        <Path Grid.Column="1"
-                              Stroke="Black"
-                              StrokeThickness="2" Height="100">
-                            <Path.Data>
-                                <LineGeometry StartPoint="0,50" EndPoint="90,50" />
-                            </Path.Data>
-                        </Path>
-                    </Grid>
-                </StackPanel>
-            </Border>
-            <Separator />
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <ToggleButton Style="{StaticResource SelectMode}" 
+                          IsChecked="{Binding InSelectMode}"
+                          Command="{Binding SetSelectMode}"
+                          CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
+            <ToggleButton Style="{StaticResource EditMode}"
+                          IsChecked="{Binding InEditMode}"
+                          Command="{Binding SetEditMode}"
+                          CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
         </StackPanel>
         <Separator Grid.Row="0" Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-        <graph:ZoomControl Grid.Column="2" Name="GraphArea" graph:ZoomControl.ViewFinderVisibility="Collapsed" Content="{Binding GraphController}" />
+        <controls:GraphCanvasControl Grid.Column="2"
+                                     GraphController="{Binding GraphController}"
+                                     ViewFinderVisibility="Collapsed">
+            <controls:GraphAreaControl GraphController="{Binding GraphController}" />
+        </controls:GraphCanvasControl>
         <StatusBar Grid.Row="1"
                    Grid.Column="0"
                    Grid.ColumnSpan="3"

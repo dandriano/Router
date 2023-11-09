@@ -8,6 +8,11 @@ namespace Router.Model
         public bool IsInRoute { get; set; }
         public bool IsOutRoute { get; set; }
 
+        public Node(string name) : base()
+        {
+            Name = name;
+        }
+
         public Node(long id, string name)
         {
             ID = id;

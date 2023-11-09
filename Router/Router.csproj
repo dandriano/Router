@@ -23,4 +23,9 @@
       <HintPath>Libs\GraphX.Standard.Logic.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+	<Resource Include="Resources\Images\se.png" />
+	<Resource Include="Resources\Images\ed.png" />
+  </ItemGroup>
 </Project>

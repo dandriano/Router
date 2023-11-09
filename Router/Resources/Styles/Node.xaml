@@ -44,6 +44,11 @@
                 <Setter Property="BorderBrush" Value="Gold"/>
                 <Setter Property="BorderThickness" Value="7"/>
             </Trigger>
+
+            <Trigger Property="graph:DragBehaviour.IsTagged" Value="True">
+                <Setter Property="BorderBrush" Value="Chocolate" />
+                <Setter Property="BorderThickness" Value="7" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 </ResourceDictionary>
