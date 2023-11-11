@@ -1,8 +1,6 @@
 ﻿using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Mvvm;
-using Router.Controllers;
-using Router.Interfaces;
 using Router.ViewModels;
 using Router.Views;
 using System.Windows;
@@ -24,9 +22,6 @@ namespace Router
             ViewModelLocationProvider.Register<GraphView, GraphViewModel>();
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<IGraphController, GraphController>();
-        }
+        protected override void RegisterTypes(IContainerRegistry containerRegistry) { }
     }
 }
