@@ -116,7 +116,9 @@ namespace Router.Controls
             var targetControl = VertexList[link.Target];
 
             var linkControl = new EdgeControl(sourceControl, targetControl, link);
+            
             AddEdgeAndData(link, linkControl, true);
+            UpdateAllEdges();
         }
     }
 }

@@ -117,6 +117,8 @@ namespace Router.ViewModels
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
                 DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA,
                 DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER,
+                EnableParallelEdges = true,
+                ParallelEdgeDistance = 25,
             };
             LogicCore.DefaultOverlapRemovalAlgorithmParams = LogicCore.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
             LogicCore.DefaultOverlapRemovalAlgorithmParams.HorizontalGap = 50;
