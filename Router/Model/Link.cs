@@ -6,8 +6,8 @@ namespace Router.Model
     {
         public Link(Node source, Node target, long weight = 1) : base(source, target, weight)
         {
-            SourceConnectionPointId = 1;
-            TargetConnectionPointId = 1;
+            // SourceConnectionPointId = 1;
+            // TargetConnectionPointId = 1;
         }
     }
 }
