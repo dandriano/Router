@@ -14,10 +14,27 @@ namespace Router.ViewModels
         public string Title => "New Node";
 
         private Node _node;
+
+        private double _top = 20;
+
+        private double _left = 20;
+        
         public Node Node
         {
             get => _node;
             set => SetProperty(ref _node, value);
+        }
+
+        public double Top
+        {
+            get => _top;
+            set => SetProperty(ref _top, value);
+        }
+
+        public double Left
+        {
+            get => _left;
+            set => SetProperty(ref _left, value);
         }
 
         public NodeViewModel()
@@ -37,6 +54,19 @@ namespace Router.ViewModels
             {
                 throw new ArgumentException(DialogsExtensions.NodeKey);
             };
+
+            if (!parameters.TryGetValue(DialogsExtensions.TopKey, out double top))
+            {
+                throw new ArgumentException(DialogsExtensions.NodeKey);
+            };
+
+            if (!parameters.TryGetValue(DialogsExtensions.LeftKey, out double left))
+            {
+                throw new ArgumentException(DialogsExtensions.NodeKey);
+            };
+
+            Top = top;
+            Left = left;
 
             Node = node;
         }

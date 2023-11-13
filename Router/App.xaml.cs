@@ -5,7 +5,6 @@ using Router.ViewModels;
 using Router.Views;
 using System.Windows;
 
-
 namespace Router
 {
     public partial class App : PrismApplication
@@ -24,6 +23,7 @@ namespace Router
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<MainWindow>();
             containerRegistry.RegisterDialogWindow<DialogWindow>();
             containerRegistry.RegisterDialog<NodeView, NodeViewModel>();
         }

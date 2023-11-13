@@ -8,6 +8,13 @@
              mc:Ignorable="d" 
              prism:ViewModelLocator.AutoWireViewModel="True">
 
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="Manual"/>
+            <Setter Property="Top" Value="{Binding Top, Mode=TwoWay}"/>
+            <Setter Property="Left" Value="{Binding Left, Mode=TwoWay}"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
