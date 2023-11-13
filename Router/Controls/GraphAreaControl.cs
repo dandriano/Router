@@ -99,7 +99,11 @@ namespace Router.Controls
 
         private void AddNode(Node node, Point pos)
         {
-            var nodeControl = new VertexControl(node);
+            var nodeControl = new NodeControl(node)
+            {
+                // drop control with node view by default
+                ShowView = true
+            };
             pos = ((UIElement)Parent).TranslatePoint(pos, this);
             pos.Offset(-50, -50);
             nodeControl.SetPosition(pos.X, pos.Y);

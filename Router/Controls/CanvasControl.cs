@@ -7,11 +7,11 @@ using System.Windows.Input;
 
 namespace Router.Controls
 {
-    public class GraphCanvasControl : ZoomControl
+    public class CanvasControl : ZoomControl
     {
         private MouseEventHandler _pendingLinkHandler;
 
-        public GraphCanvasControl()
+        public CanvasControl()
         {
             Loaded += OnLoaded;
         }

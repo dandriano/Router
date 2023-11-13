@@ -65,7 +65,6 @@ namespace Router.ViewModels
             set => SetProperty(ref _inEditMode, value);
         }
         #endregion
-
         public GraphViewModel()
         {
             LogicCore = new GXLogicCore<Node, Link, Graph>(new Graph())

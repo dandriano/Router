@@ -5,7 +5,6 @@ using Router.ViewModels;
 using Router.Views;
 using System.Windows;
 
-
 namespace Router
 {
     public partial class App : PrismApplication
@@ -22,6 +21,8 @@ namespace Router
             ViewModelLocationProvider.Register<GraphView, GraphViewModel>();
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry) { }
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+        }
     }
 }

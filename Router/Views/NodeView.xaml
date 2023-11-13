@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="Router.Views.NodeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:Router.Controls"
+             xmlns:m="clr-namespace:Router.Model"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Type m:Node}">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="ID"
+                  Grid.Row="0">
+            <c:DefaultTextTextBox DefaultText="ID for a new node" Text="{Binding ID}"/>
+        </GroupBox>
+        <GroupBox Header="Name"
+                  Grid.Row="1">
+            <c:DefaultTextTextBox DefaultText="Name for a new node" Text="{Binding Name}"/>
+        </GroupBox>
+    </Grid>
+</UserControl>
