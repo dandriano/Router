@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:controls="clr-namespace:Router.Controls"
+             xmlns:c="clr-namespace:Router.Controls"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -31,21 +31,21 @@
                           CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
         </StackPanel>
         <Separator Grid.Row="0" Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-        <controls:GraphCanvasControl Grid.Column="2"
+        <c:CanvasControl Grid.Column="2"
                                      ViewFinderVisibility="Collapsed">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
                     <prism:InvokeCommandAction Command="{Binding CanvasInteraction}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <controls:GraphAreaControl >
+            <c:GraphAreaControl >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="VertexSelected">
                         <prism:InvokeCommandAction Command="{Binding NodeSelected}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </controls:GraphAreaControl>
-        </controls:GraphCanvasControl>
+            </c:GraphAreaControl>
+        </c:CanvasControl>
         <StatusBar Grid.Row="1"
                    Grid.Column="0"
                    Grid.ColumnSpan="3"

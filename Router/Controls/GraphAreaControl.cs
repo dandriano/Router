@@ -101,6 +101,7 @@ namespace Router.Controls
         {
             var nodeControl = new NodeControl(node)
             {
+                // drop control with node view by default
                 ShowView = true
             };
             pos = ((UIElement)Parent).TranslatePoint(pos, this);
