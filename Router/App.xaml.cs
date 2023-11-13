@@ -23,7 +23,6 @@ namespace Router
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<MainWindow>();
             containerRegistry.RegisterDialogWindow<DialogWindow>();
             containerRegistry.RegisterDialog<NodeView, NodeViewModel>();
         }

@@ -14,23 +14,20 @@ namespace Router.ViewModels
         public string Title => "New Node";
 
         private Node _node;
-
-        private double _top = 20;
-
-        private double _left = 20;
-        
         public Node Node
         {
             get => _node;
             set => SetProperty(ref _node, value);
         }
 
+        private double _top;
         public double Top
         {
             get => _top;
             set => SetProperty(ref _top, value);
         }
 
+        private double _left;
         public double Left
         {
             get => _left;
@@ -67,7 +64,6 @@ namespace Router.ViewModels
 
             Top = top;
             Left = left;
-
             Node = node;
         }
     }
