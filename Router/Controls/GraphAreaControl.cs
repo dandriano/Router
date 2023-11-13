@@ -24,16 +24,32 @@ namespace Router.Controls
 
         private void OnVertexSelected(object sender, VertexSelectedEventArgs args)
         {
-            if (args.MouseArgs.LeftButton != MouseButtonState.Pressed) return;
-
             switch (((IGraphViewModel)DataContext).Mode)
             {
                 case GraphMode.None:
                     break;
                 case GraphMode.Select:
-                    if (args.Modifiers == ModifierKeys.Control)
+                    if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
                     {
-                        SwitchTagged(args.VertexControl);
+                        if (args.Modifiers == ModifierKeys.Control)
+                        {
+                            SwitchTagged(args.VertexControl);
+                        }
+                    }
+                    else if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
+                    {
+                        var nc = (NodeControl)args.VertexControl;
+                        if (nc.ShowView) return;
+                        // temporary disabled
+                        // nc.ContextMenu.IsOpen = true;
+                    }
+                    break;
+                case GraphMode.Edit:
+                    if (args.MouseArgs.RightButton != MouseButtonState.Pressed) return;
+                    {
+                        var nc = (NodeControl)args.VertexControl;
+                        if (nc.ShowView) return;
+                        nc.ContextMenu.IsOpen = true;
                     }
                     break;
             }
@@ -59,6 +75,10 @@ namespace Router.Controls
                 case GraphMode.None:
                     break;
                 case GraphMode.Select:
+                    VertexList.Values
+                        .Where(c => ((NodeControl)c).ShowView == true)
+                        .ForEach(SwitchView);
+
                     SetVerticesDrag(true, true);
                     SetEdgesDrag(true);
                     break;
@@ -95,6 +115,12 @@ namespace Router.Controls
                 HighlightBehaviour.SetHighlighted(nodeControl, true);
                 DragBehaviour.SetIsTagged(nodeControl, true);
             }
+        }
+
+        private void SwitchView(VertexControl nodeControl)
+        {
+            var node = (NodeControl)nodeControl;
+            node.ShowView = !node.ShowView;
         }
 
         private void AddNode(Node node, Point pos)

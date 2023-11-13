@@ -1,5 +1,6 @@
 ﻿using GraphX.Controls;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Router.Controls
 {
@@ -23,6 +24,18 @@ namespace Router.Controls
             set => SetValue(ViewVisibilityProperty, value);
         }
 
-        public NodeControl(object vertexData, bool tracePositionChange = true, bool bindToDataObject = true) : base(vertexData, tracePositionChange, bindToDataObject) { }
+        public NodeControl(object vertexData, bool tracePositionChange = true, bool bindToDataObject = true) : base(vertexData, tracePositionChange, bindToDataObject)
+        {
+            ContextMenu = new ContextMenu();
+            var menuItem = new MenuItem()
+            {
+                Header = "Edit"
+            };
+            menuItem.Click += (s, e) =>
+            {
+                ShowView = true;
+            };
+            ContextMenu.Items.Add(menuItem);
+        }
     }
 }

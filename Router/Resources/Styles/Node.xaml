@@ -47,18 +47,21 @@
                                                   Content="{Binding Vertex.Name, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
 
-                        <StackPanel x:Name="NodeView" Grid.Column="1" Visibility="{TemplateBinding ViewVisibility}">
-                            <v:NodeView DataContext="{Binding}" />
-                            <Button Content="ОК">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click" >
-                                        <i:ChangePropertyAction PropertyName="ShowView" 
-                                                                Value="false"
-                                                                TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=c:NodeControl}}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Button>
-                        </StackPanel>
+                        <Grid Grid.Column="1" Visibility="{TemplateBinding ViewVisibility}">
+                            <Rectangle Fill="{TemplateBinding Background}" />
+                            <StackPanel>
+                                <v:NodeView DataContext="{Binding}" />
+                                <Button Content="ОК">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click" >
+                                            <i:ChangePropertyAction PropertyName="ShowView" 
+                                                                    Value="false"
+                                                                    TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=c:NodeControl}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

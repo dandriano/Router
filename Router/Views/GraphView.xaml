@@ -32,7 +32,7 @@
         </StackPanel>
         <Separator Grid.Row="0" Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
         <c:CanvasControl Grid.Column="2"
-                                     ViewFinderVisibility="Collapsed">
+                         ViewFinderVisibility="Collapsed">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
                     <prism:InvokeCommandAction Command="{Binding CanvasInteraction}" />

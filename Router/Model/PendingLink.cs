@@ -1,4 +1,5 @@
 ﻿using GraphX.Controls;
+using Router.Controls;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -8,9 +9,9 @@ namespace Router.Model
     public class PendingLink
     {
         public Node Source { get; set; }
-        public VertexControl SourcePoint { get; set; }
+        public NodeControl SourcePoint { get; set; }
         public Node Target { get; set; }
-        public VertexControl TargetPoint { get; set; }
+        public NodeControl TargetPoint { get; set; }
         public Point TargetPos { get; set; }
         public Path LinkPath { get; set; }
 
@@ -19,7 +20,8 @@ namespace Router.Model
             LinkPath = new Path() { Stroke = brush, Data = new LineGeometry() };
             TargetPos = new Point(x, y);
             Source = sourcePoint.GetDataVertex<Node>();
-            SourcePoint = sourcePoint;
+            SourcePoint = (NodeControl)sourcePoint;
+            SourcePoint.ShowView = false;
         }
 
         internal void UpdateTargetPosition(Point point)
@@ -30,7 +32,8 @@ namespace Router.Model
 
         internal void SetTarget(VertexControl nodeControl)
         {
-            TargetPoint = nodeControl;
+            TargetPoint = (NodeControl)nodeControl;
+            TargetPoint.ShowView = false;
             Target = nodeControl?.GetDataVertex<Node>();
         }
 
