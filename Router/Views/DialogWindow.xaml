@@ -1,13 +1,16 @@
-﻿<Window x:Class="Router.MainWindow"
+﻿<Window x:Class="Router.Views.DialogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:v="clr-namespace:Router.Views"
         mc:Ignorable="d"
-        Title="Router" Height="600" Width="900">
-
+        Title="DialogWindow"
+        WindowStyle = "None"
+        Topmost = "True"
+        AllowsTransparency = "True"
+        Width="150"
+        Height="110">
     <Grid>
-        <v:GraphView/>
+        
     </Grid>
 </Window>

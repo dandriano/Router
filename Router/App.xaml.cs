@@ -22,6 +22,10 @@ namespace Router
             ViewModelLocationProvider.Register<GraphView, GraphViewModel>();
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry) { }
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterDialogWindow<DialogWindow>();
+            containerRegistry.RegisterDialog<NodeView, NodeViewModel>();
+        }
     }
 }

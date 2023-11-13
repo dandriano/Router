@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:Router.Controls">
     
     <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
     <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
@@ -109,6 +110,48 @@
                         </Image>
                     </StackPanel>
                 </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Текстовое поле с "затемненным" значением по умолчанию
+    https://stackoverflow.com/a/10428804/6634373 -->
+    <Style TargetType="{x:Type c:DefaultTextTextBox}">
+        <!-- устанавливаем для DefaultTextTextBox шаблон по умолчанию-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:DefaultTextTextBox">
+                    <Grid>
+                        <TextBox 
+                                Text="{Binding Text, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{TemplateBinding DefaultText}"
+                           Margin="5,0,5,0"
+                           Foreground="#FF808080"
+                           FontStyle="Italic"
+                           IsHitTestVisible="False"
+                           x:Name="UserMessage"
+                           Visibility="Hidden"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition 
+                                        Property="Text" 
+                                        Value=""/>
+                                <Condition 
+                                        Property="IsKeyboardFocusWithin"
+                                        Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter 
+                                    Property="Visibility" 
+                                    TargetName="UserMessage"
+                                    Value="Visible"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>

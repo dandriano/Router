@@ -4,9 +4,11 @@ using GraphX.Controls.Models;
 using GraphX.Logic.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using Router.Enums;
 using Router.Interfaces;
 using Router.Model;
+using Router.Utils;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -17,6 +19,7 @@ namespace Router.ViewModels
 {
     public class GraphViewModel : BindableBase, IGraphViewModel
     {
+        private readonly IDialogService dialogs;
         private PendingLink _pendingLink;
         public IGXLogicCore<Node, Link, Graph> LogicCore { get; private set; }
         #region [Commands and Events]
@@ -66,8 +69,9 @@ namespace Router.ViewModels
         }
         #endregion
 
-        public GraphViewModel()
+        public GraphViewModel(IDialogService dialogService)
         {
+            dialogs = dialogService;
             LogicCore = new GXLogicCore<Node, Link, Graph>(new Graph())
             {
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
@@ -168,7 +172,7 @@ namespace Router.ViewModels
 
         private Node AddNode(string name)
         {
-            var node = new Node(name);
+            var node = dialogs.GetNewNode(name);
             Nodes.Add(node);
 
             return node;
