@@ -4,65 +4,111 @@
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:c="clr-namespace:Router.Controls"
                     xmlns:v="clr-namespace:Router.Views">
-    
+
+    <!-- Node specific brushes -->
+    <SolidColorBrush x:Key="Node.Off" Color="Black"/>
+    <SolidColorBrush x:Key="Node.On" Color="Green"/>
+    <SolidColorBrush x:Key="Node.Warning.On" Color="Red"/>
+    <SolidColorBrush x:Key="Node.Warning.Off" Color="Transparent"/>
+
+    <!-- Drawing image for terminal node -->
+    <DrawingImage x:Key="TermNode">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V34 H34 V0 H0 Z">
+                <GeometryDrawing Brush="{StaticResource Node.On}"  Geometry="F1 M34,34z M0,0z M30.7823544,33.5L3.2176471,33.5C1.6647059,33.5,0.5,31.9470596,0.5,29.908823L0.5,4.0911765C0.5,2.0529411,1.6647059,0.5,3.2176471,0.5L30.782352,0.5C32.3352928,0.5,33.5,2.0529411,33.5,4.0911765L33.5,30.0058837C33.5,31.9470596,32.2382355,33.5,30.7823544,33.5z" />
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M34,34z M0,0z M20.8973389,22.3044872C20.8973389,22.3839416 20.8943825,22.4530506 20.8888378,22.5125503 20.882925,22.57168 20.8759041,22.6212005 20.867773,22.6607437 20.8592739,22.7002869 20.8492946,22.7342853 20.8378391,22.762743 20.8263817,22.7908287 20.8093834,22.8163281 20.7872085,22.838871 20.7642955,22.861414 20.7262325,22.8824806 20.6726455,22.9024353 20.6186885,22.9223919 20.5580806,22.9393921 20.4900817,22.9534359 20.4224528,22.9674778 20.3529758,22.9789352 20.2823886,22.9874344 20.2118034,22.9959354 20.1397381,23 20.0661964,23 19.8119392,23 19.5868759,22.9730225 19.3921184,22.9194355 19.1969909,22.8658504 19.0258827,22.7723503 18.8787994,22.639679 18.7317142,22.5070057 18.6019973,22.3244439 18.4889125,22.0927296 18.3758258,21.8610154 18.2653274,21.566845 18.1581554,21.2105885L16.7501297,16.5633641 14.6639605,22.5846139C14.6414175,22.6522428 14.61444,22.7073079 14.583397,22.7498075 14.552353,22.792307 14.5057889,22.8248292 14.4437028,22.8473722 14.3812467,22.8699152 14.299574,22.8854372 14.1975757,22.8939363 14.0959464,22.9024354 13.9629041,22.90687 13.7991887,22.90687 13.6295606,22.90687 13.4924537,22.899479 13.387868,22.8854371 13.2829133,22.8713933 13.2082616,22.8447839 13.1631757,22.8048726 13.1177198,22.7653294 13.0977632,22.7102643 13.103676,22.639679 13.1092197,22.5690918 13.1347191,22.4770718 13.1798059,22.363987L16.122616,14.6804533 15.9023581,14.01894C15.6362744,13.199255 15.4245167,12.6877833 15.2663441,12.4841547 15.1078024,12.2805271 14.8731318,12.1788979 14.5623312,12.1788979 14.4037905,12.1788979 14.2341614,12.20292 14.0534468,12.2509623 13.8723622,12.2990056 13.7622328,12.3230267 13.7226897,12.3230267 13.694234,12.3230267 13.6702128,12.317483 13.6506253,12.3060265 13.6306697,12.29494 13.6136695,12.2709189 13.5996266,12.2339631 13.5855828,12.1973763 13.5756045,12.148964 13.5700617,12.0898343 13.564518,12.0303346 13.5615616,11.9527274 13.5615616,11.8566419 13.5615616,11.6870128 13.5700617,11.5554496 13.5870609,11.4623205 13.6040611,11.3688213 13.633626,11.3011925 13.6761255,11.2586929 13.718625,11.2161933 13.7777548,11.1810848 13.8542537,11.1526291 13.9303827,11.1245424 14.0294256,11.0960857 14.1510104,11.0679991 14.2725962,11.0395434 14.3842028,11.021065 14.4858321,11.0125649 14.5878315,11.0044346 14.683917,11 14.7744589,11 15.0797167,11 15.3539305,11.0339994 15.5971012,11.1016293 15.8399019,11.1696282 16.0605297,11.2997132 16.2582455,11.4918852 16.4563294,11.6840563 16.6414795,11.9527273 16.8140641,12.2975273 16.9862786,12.6423273 17.1544286,13.092082 17.3185139,13.6460533L19.548811,20.8628311C19.6053544,21.060915 19.6618977,21.2190876 19.7184391,21.337717 19.7749825,21.4567146 19.833004,21.5498447 19.8925037,21.6178436 19.9516334,21.6854725 20.0181541,21.7320385 20.0916957,21.7575378 20.1648692,21.7830371 20.2528247,21.7959709 20.354454,21.7959709 20.4224529,21.7959709 20.484539,21.7915363 20.5410823,21.7830372 20.5976237,21.7745381 20.6456679,21.7704716 20.6852111,21.7704716 20.7247523,21.7704716 20.7587527,21.7760163 20.7872085,21.7874718 20.8152961,21.7985592 20.8363609,21.8225804 20.8507728,21.8595372 20.8648166,21.8961221 20.875904,21.950079 20.8844032,22.0206643 20.8929043,22.0912514 20.8973389,22.1858578 20.8973389,22.3044872z" />
+                </DrawingGroup>
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M34,34z M0,0z M8.2928705,29.1596642L4.292871,25.1594124C4.1053481,24.9718781,4,24.7175331,4,24.4523277L4,9.5476723C4,9.2824669,4.1053481,9.028122,4.292871,8.8405876L8.2928705,4.8403358C8.9228268,4.21034,10,4.6565003,10,5.54742L10,28.452579C10,29.3435001,8.9228268,29.7896595,8.2928705,29.1596642z" />
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M34,34z M0,0z M25.7071285,4.8403358L29.7071285,8.8405876C29.8946514,9.0281219,30,9.2824669,30,9.5476723L30,24.4523278C30,24.7175332,29.8946514,24.9718781,29.7071285,25.1594125L25.7071285,29.1596643C25.0771732,29.7896595,24,29.3435001,24,28.4525795L24,5.54742C24,4.6565003,25.0771732,4.21034,25.7071285,4.8403358z" />
+                <GeometryDrawing Brush="{StaticResource Node.Warning.Off}">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Node.Warning.Off}" Thickness="1.1159" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry RadiusX="6.8" RadiusY="6.8" Center="25.2,25.3" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="{StaticResource Node.Warning.Off}" Geometry="F1 M34,34z M0,0z M24.3999996,29L24.3999996,28.7999992C24.3999996,28.2999992,24.6999988,28.0999984,25.1000004,28.0999984L25.3000012,28.0999984C25.8000012,28.0999984,26.000002,28.3999976,26.000002,28.7999992L26.000002,29C26.000002,29.5,25.8000012,29.7000008,25.3000012,29.7000008L25.1000004,29.7000008C24.6000004,29.7000008,24.3999996,29.5,24.3999996,29z M24.7999992,26.7000008L24.3999996,21.8000012C24.2999992,21.2000008,24.6000004,21.0000019,25,21.0000019L25.2999992,21.0000019C25.7999992,21.0000019,26,21.3000011,25.8999996,21.8000011L25.5,26.7000008C25.5,27,25.3999996,27.2000008,25.2000008,27.2000008L25.1000004,27.2000008C24.8999996,27.1000004,24.8999996,27,24.7999992,26.7000008z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Drawing image for OLA node -->
+    <DrawingImage x:Key="OLANode">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V34 H34 V0 H0 Z">
+                <GeometryDrawing Brush="{StaticResource Node.On}" Geometry="F1 M34,34z M0,0z M30.29706,33.5L3.6058824,33.5C1.9558823,33.5,0.5,32.1411743,0.5,30.3941174L0.5,3.6058824C0.5,1.8588235,1.8588235,0.5,3.6058824,0.5L30.394119,0.5C32.044117,0.5,33.5,1.8588235,33.5,3.6058824L33.5,30.4911783C33.4029427,32.1411743,32.044117,33.5,30.29706,33.5z" />
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M34,34z M0,0z M23.8999996,15.8999996L11.3999996,8.6000004C10.5,8.1000004,9.5,8.7000008,9.5,9.7000008L9.5,24.1000004C9.5,25.1000004,10.6000004,25.8000012,11.3999996,25.2000008L23.7999992,18C24.7000008,17.7000008,24.7000008,16.3999996,23.8999996,15.8999996z" />
+                <GeometryDrawing Brush="{StaticResource Node.Warning.Off}">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource Node.Warning.Off}" Thickness="1.1159" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry RadiusX="6.8" RadiusY="6.8" Center="25.2,25.3" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="{StaticResource Node.Warning.Off}" Geometry="F1 M34,34z M0,0z M24.3999996,29L24.3999996,28.7999992C24.3999996,28.2999992,24.6999988,28.0999984,25.1000004,28.0999984L25.3000012,28.0999984C25.8000012,28.0999984,26.000002,28.3999976,26.000002,28.7999992L26.000002,29C26.000002,29.5,25.8000012,29.7000008,25.3000012,29.7000008L25.1000004,29.7000008C24.6000004,29.7000008,24.3999996,29.5,24.3999996,29z M24.7999992,26.7000008L24.3999996,21.8000012C24.2999992,21.2000008,24.6000004,21.0000019,25,21.0000019L25.2999992,21.0000019C25.7999992,21.0000019,26,21.3000011,25.8999996,21.8000011L25.5,26.7000008C25.5,27,25.3999996,27.2000008,25.2000008,27.2000008L25.1000004,27.2000008C24.8999996,27.1000004,24.8999996,27,24.7999992,26.7000008z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Node control styling -->
     <Style TargetType="{x:Type c:NodeControl}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="5"/>
+        <Setter Property="BorderThickness" Value="2"/>
         <Setter Property="Padding" Value="10,5,10,5"/>
-        <Setter Property="BorderBrush" Value="Gray"/>
-        <Setter Property="VertexShape" Value="Circle"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="VertexShape" Value="Rectangle"/>
         <Setter Property="ShowLabel" Value="True"/>
         <Setter Property="ShowView" Value="False"/>
         <Setter Property="ViewVisibility" Value="Collapsed" />
+        <Setter Property="NodeType" Value="{Binding Type}" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type c:NodeControl}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="0" >
-                            <Ellipse Width="100"
-                                     Height="100"
-                                     Fill="{TemplateBinding Background}"
-                                     Stroke="{TemplateBinding BorderBrush}"
-                                     StrokeThickness="{TemplateBinding BorderThickness}"
-                                     StrokeDashArray="4 2"
-                                     StrokeDashCap="Round" />
-                            <StackPanel x:Name="PART_vcproot" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Border Width="20"
-                                        Height="20"
-                                        CornerRadius="20"
-                                        BorderBrush="{TemplateBinding BorderBrush}" 
-                                        BorderThickness="1">
-                                    <graph:StaticVertexConnectionPoint Id="1" Height="20" Width="20" />
-                                </Border>
-                            </StackPanel>
-                            <graph:VertexLabelControl x:Name="PART_vertexLabel"
-                                                  LabelPositionMode="Sides"
-                                                  LabelPositionSide="Top"
-                                                  Content="{Binding Vertex.Name, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
-                        </Grid>
+                            <Grid Grid.Column="0">
+                                <Image Source="{TemplateBinding NodeImage}" />
+                                <graph:VertexLabelControl x:Name="PART_vertexLabel"
+                                                          LabelPositionMode="Sides"
+                                                          LabelPositionSide="Top"
+                                                          Content="{Binding Vertex.Name, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
 
-                        <Grid Grid.Column="1" Visibility="{TemplateBinding ViewVisibility}">
-                            <Rectangle Fill="{TemplateBinding Background}" />
-                            <StackPanel>
-                                <v:NodeView DataContext="{Binding}" />
-                                <Button Content="ОК">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click" >
-                                            <i:ChangePropertyAction PropertyName="ShowView" 
-                                                                    Value="false"
-                                                                    TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=c:NodeControl}}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </Button>
-                            </StackPanel>
+                            <Grid Grid.Column="1" Visibility="{TemplateBinding ViewVisibility}">
+                                <Rectangle Fill="{TemplateBinding Background}" />
+                                <StackPanel>
+                                    <v:NodeView DataContext="{Binding}" />
+                                    <Button Content="ОК" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Click" >
+                                                <i:ChangePropertyAction PropertyName="ShowView" 
+                                                                        Value="false"
+                                                                        TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=c:NodeControl}}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -70,19 +116,26 @@
         <Style.Triggers>
             <Trigger Property="graph:HighlightBehaviour.Highlighted" Value="True">
                 <Setter Property="BorderBrush" Value="Gold"/>
-                <Setter Property="BorderThickness" Value="7"/>
             </Trigger>
 
             <Trigger Property="graph:DragBehaviour.IsTagged" Value="True">
                 <Setter Property="BorderBrush" Value="Chocolate" />
-                <Setter Property="BorderThickness" Value="7" />
             </Trigger>
 
             <Trigger Property="ShowView" Value="True">
                 <Setter Property="ViewVisibility" Value="Visible"/>
             </Trigger>
+            
             <Trigger Property="ShowView" Value="False">
                 <Setter Property="ViewVisibility" Value="Collapsed"/>
+            </Trigger>
+
+            <Trigger Property="NodeType" Value="Terminal">
+                <Setter Property="NodeImage" Value="{StaticResource TermNode}" />
+            </Trigger>
+
+            <Trigger Property="NodeType" Value="OLA">
+                <Setter Property="NodeImage" Value="{StaticResource OLANode}" />
             </Trigger>
         </Style.Triggers>
     </Style>

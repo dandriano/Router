@@ -5,22 +5,39 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:c="clr-namespace:Router.Controls"
              xmlns:m="clr-namespace:Router.Model"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
+             xmlns:e="clr-namespace:Router.Enums"
              mc:Ignorable="d" 
              d:DataContext="{x:Type m:Node}">
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="NodeTypes" 
+                            MethodName="GetValues"
+                            ObjectType="{x:Type s:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="e:NodeType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <GroupBox Header="ID"
                   Grid.Row="0">
-            <c:DefaultTextTextBox DefaultText="ID for a new node" Text="{Binding ID}"/>
+            <c:DefaultTextTextBox DefaultText="ID for a new node" Text="{Binding ID}" />
         </GroupBox>
         <GroupBox Header="Name"
                   Grid.Row="1">
-            <c:DefaultTextTextBox DefaultText="Name for a new node" Text="{Binding Name}"/>
+            <c:DefaultTextTextBox DefaultText="Name for a new node" Text="{Binding Name}" />
+        </GroupBox>
+        <GroupBox Header="Type"
+                  Grid.Row="2">
+            <ComboBox ItemsSource="{Binding Source={StaticResource NodeTypes}}" SelectedItem="{Binding Type}" />
         </GroupBox>
     </Grid>
 </UserControl>

@@ -141,13 +141,7 @@ namespace Router.ViewModels
                     break;
                 case GraphMode.Edit:
                     var pos = a.MouseArgs.GetPosition((IInputElement)a.VertexControl.Parent);
-                    var point = a.VertexControl.GetConnectionPointAt(pos);
-
-                    if (point == null)
-                    {
-                        return;
-                    }
-                    else if (_pendingLink != default)
+                    if (_pendingLink != default)
                     {
                         _pendingLink.SetTarget(a.VertexControl);
                         PendingLinkCompleted?.Invoke(_pendingLink);
