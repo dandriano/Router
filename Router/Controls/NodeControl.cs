@@ -35,13 +35,40 @@ namespace Router.Controls
             set => SetValue(NodeTypeProperty, value);
         }
 
-        public static readonly DependencyProperty NodeImageProperty =
-                DependencyProperty.Register("NodeImage", typeof(DrawingImage), typeof(NodeControl), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty NodeTemplateProperty =
+                DependencyProperty.Register("NodeTemplate", typeof(DataTemplate), typeof(NodeControl), new UIPropertyMetadata(null));
 
-        public DrawingImage NodeImage
+        public DataTemplate NodeTemplate
         {
-            get => (DrawingImage)GetValue(NodeImageProperty);
-            set => SetValue(NodeImageProperty, value);
+            get => (DataTemplate)GetValue(NodeTemplateProperty);
+            set => SetValue(NodeTemplateProperty, value);
+        }
+
+        public static readonly DependencyProperty NodeBrushProperty =
+                DependencyProperty.Register("NodeBrush", typeof(Brush), typeof(NodeControl), new UIPropertyMetadata(null));
+
+        public Brush NodeBrush
+        {
+            get => (Brush)GetValue(NodeBrushProperty);
+            set => SetValue(NodeBrushProperty, value);
+        }
+
+        public static readonly DependencyProperty NodeWarnBrushProperty =
+                DependencyProperty.Register("NodeWarnBrush", typeof(Brush), typeof(NodeControl), new UIPropertyMetadata(null));
+
+        public Brush NodeWarnBrush
+        {
+            get => (Brush)GetValue(NodeWarnBrushProperty);
+            set => SetValue(NodeWarnBrushProperty, value);
+        }
+
+        public static readonly DependencyProperty NodeWarnBackgroundBrushProperty =
+                DependencyProperty.Register("NodeWarnBackgroundBrush", typeof(Brush), typeof(NodeControl), new UIPropertyMetadata(null));
+
+        public Brush NodeWarnBackgroundBrush
+        {
+            get => (Brush)GetValue(NodeWarnBackgroundBrushProperty);
+            set => SetValue(NodeWarnBackgroundBrushProperty, value);
         }
 
         public NodeControl(object vertexData, bool tracePositionChange = true, bool bindToDataObject = true) : base(vertexData, tracePositionChange, bindToDataObject)
