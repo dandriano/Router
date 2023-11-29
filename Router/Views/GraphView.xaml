@@ -12,26 +12,61 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0">
-            <ToggleButton Style="{StaticResource SelectMode}" 
-                          IsChecked="{Binding InSelectMode}"
-                          Command="{Binding SetSelectMode}"
-                          CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
-            <ToggleButton Style="{StaticResource EditMode}"
-                          IsChecked="{Binding InEditMode}"
-                          Command="{Binding SetEditMode}"
-                          CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
+        
+        <StackPanel Grid.Row="0" 
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3">
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton Style="{StaticResource SelectMode}" 
+                              IsChecked="{Binding InSelectMode}"
+                              Command="{Binding SetSelectMode}"
+                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                              MinWidth="105"/>
+                <ToggleButton Style="{StaticResource EditMode}"
+                              IsChecked="{Binding InEditMode}"
+                              Command="{Binding SetEditMode}"
+                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                              MinWidth="105"/>
+            </StackPanel>
+            <Separator />
         </StackPanel>
-        <Separator Grid.Row="0" Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-        <c:CanvasControl Grid.Column="2"
+
+        <StackPanel Grid.Row="1" 
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+            <StackPanel>
+                <ToggleButton Style="{StaticResource TerminalMode}" 
+                              IsEnabled="{Binding InEditMode}"
+                              IsChecked="{Binding InTerminalNodeMode}"
+                              Command="{Binding SetTerminalNodeMode}"
+                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                              MinWidth="105"/>
+                <ToggleButton Style="{StaticResource OLAMode}"
+                              IsEnabled="{Binding InEditMode}"
+                              IsChecked="{Binding InOLANodeMode}"
+                              Command="{Binding SetOLANodeMode}"
+                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                              MinWidth="105"/>
+                <ToggleButton Style="{StaticResource ROADMMode}"
+                              IsEnabled="{Binding InEditMode}"
+                              IsChecked="{Binding InROADMNodeMode}"
+                              Command="{Binding SetROADMNodeMode}"
+                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                              MinWidth="105"/>
+            </StackPanel>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        </StackPanel>
+
+        <c:CanvasControl Grid.Row="1"
+                         Grid.Column="1"
                          ViewFinderVisibility="Collapsed">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
@@ -46,24 +81,27 @@
                 </i:Interaction.Triggers>
             </c:GraphAreaControl>
         </c:CanvasControl>
-        <StatusBar Grid.Row="1"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
-                   VerticalAlignment="Bottom" 
-                   Background="Beige" >
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Node count:    "/>
-                    <TextBlock Text="{Binding Nodes.Count}"/>
-                </StackPanel>
-            </StatusBarItem>
+
+        <StackPanel Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    VerticalAlignment="Bottom">
             <Separator />
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Link count:    "/>
-                    <TextBlock Text="{Binding Links.Count}"/>
-                </StackPanel>
-            </StatusBarItem>
-        </StatusBar>
+            <StatusBar Background="Beige" >
+                <StatusBarItem>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Node count:    "/>
+                        <TextBlock Text="{Binding Nodes.Count}"/>
+                    </StackPanel>
+                </StatusBarItem>
+                <Separator />
+                <StatusBarItem>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Link count:    "/>
+                        <TextBlock Text="{Binding Links.Count}"/>
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+        </StackPanel>
     </Grid>
 </UserControl>

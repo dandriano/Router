@@ -23,6 +23,9 @@ namespace Router.ViewModels
         public DelegateCommand Initialize { get; private set; }
         public DelegateCommand<object> SetSelectMode { get; private set; }
         public DelegateCommand<object> SetEditMode { get; private set; }
+        public DelegateCommand<object> SetTerminalNodeMode { get; private set; }
+        public DelegateCommand<object> SetOLANodeMode { get; private set; }
+        public DelegateCommand<object> SetROADMNodeMode { get; private set; }
         public DelegateCommand<VertexSelectedEventArgs> NodeSelected { get; private set; }
         public DelegateCommand<MouseButtonEventArgs> CanvasInteraction { get; private set; }
 
@@ -51,6 +54,13 @@ namespace Router.ViewModels
             });
         }
 
+        private NodeType _nodeMode;
+        public NodeType NodeMode
+        {
+            get => _nodeMode;
+            set => SetProperty(ref _nodeMode, value);
+        }
+
         private bool _inSelectionMode;
         public bool InSelectMode
         {
@@ -63,6 +73,27 @@ namespace Router.ViewModels
         {
             get => _inEditMode;
             set => SetProperty(ref _inEditMode, value);
+        }
+
+        private bool _inTerminalNodeMode;
+        public bool InTerminalNodeMode
+        {
+            get => _inTerminalNodeMode;
+            set => SetProperty(ref _inTerminalNodeMode, value);
+        }
+
+        private bool _inOLANodeMode;
+        public bool InOLANodeMode
+        {
+            get => _inOLANodeMode;
+            set => SetProperty(ref _inOLANodeMode, value);
+        }
+
+        private bool _inROADMNodeMode;
+        public bool InROADMNodeMode
+        {
+            get => _inROADMNodeMode;
+            set => SetProperty(ref _inROADMNodeMode, value);
         }
         #endregion
         public GraphViewModel()
@@ -79,6 +110,8 @@ namespace Router.ViewModels
 
             InSelectMode = true;
             Mode = GraphMode.Select;
+            InTerminalNodeMode = true;
+            NodeMode = NodeType.Terminal;
 
             SetSelectMode = new DelegateCommand<object>((check) =>
             {
@@ -106,6 +139,48 @@ namespace Router.ViewModels
                 }
             });
 
+            SetTerminalNodeMode = new DelegateCommand<object>((check) =>
+            {
+                if ((bool)check)
+                {
+                    InOLANodeMode = false;
+                    InROADMNodeMode = false;
+                    NodeMode = NodeType.Terminal;
+                }
+                else
+                {
+                    InTerminalNodeMode = true;
+                }
+            });
+
+            SetOLANodeMode = new DelegateCommand<object>((check) =>
+            {
+                if ((bool)check)
+                {
+                    InTerminalNodeMode = false;
+                    InROADMNodeMode = false;
+                    NodeMode = NodeType.OLA;
+                }
+                else
+                {
+                    InOLANodeMode = true;
+                }
+            });
+
+            SetROADMNodeMode = new DelegateCommand<object>((check) =>
+            {
+                if ((bool)check)
+                {
+                    InTerminalNodeMode = false;
+                    InOLANodeMode = false;
+                    NodeMode = NodeType.ROADM;
+                }
+                else
+                {
+                    InROADMNodeMode = true;
+                }
+            });
+
             NodeSelected = new DelegateCommand<VertexSelectedEventArgs>(OnNodeSelected);
             CanvasInteraction = new DelegateCommand<MouseButtonEventArgs>(OnCanvasInteraction);
         }
@@ -122,7 +197,7 @@ namespace Router.ViewModels
                     break;
                 case GraphMode.Edit:
                     var pos = e.GetPosition((UIElement)e.Source);
-                    var node = AddNode($"#{Nodes.Count + 1} Node");
+                    var node = AddNode($"#{Nodes.Count + 1} Node", NodeMode);
 
                     NodeRequested.Invoke(node, pos);
                     break;
@@ -141,15 +216,11 @@ namespace Router.ViewModels
                     break;
                 case GraphMode.Edit:
                     var pos = a.MouseArgs.GetPosition((IInputElement)a.VertexControl.Parent);
-                    var point = a.VertexControl.GetConnectionPointAt(pos);
-
-                    if (point == null)
-                    {
-                        return;
-                    }
-                    else if (_pendingLink != default)
+                    if (_pendingLink != default)
                     {
                         _pendingLink.SetTarget(a.VertexControl);
+                        // prevent self-loop
+                        if (_pendingLink.Source.ID == _pendingLink.Target.ID) return;
                         PendingLinkCompleted?.Invoke(_pendingLink);
 
                         var link = AddLink(_pendingLink.Source, _pendingLink.Target);
@@ -165,9 +236,9 @@ namespace Router.ViewModels
             }
         }
 
-        private Node AddNode(string name)
+        private Node AddNode(string name, NodeType type)
         {
-            var node = new Node(name);
+            var node = new Node(name, type);
             Nodes.Add(node);
 
             return node;
