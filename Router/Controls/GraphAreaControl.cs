@@ -128,10 +128,10 @@ namespace Router.Controls
             var nodeControl = new NodeControl(node)
             {
                 // drop control with node view by default
-                ShowView = true
+                // ShowView = true
             };
             pos = ((UIElement)Parent).TranslatePoint(pos, this);
-            pos.Offset(-50, -50);
+            pos.Offset(-20, -20);
             nodeControl.SetPosition(pos.X, pos.Y);
             AddVertexAndData(node, nodeControl);
             nodeControl.OnApplyTemplate();

@@ -15,6 +15,7 @@ namespace Router.Interfaces
         event Action<PendingLink> PendingLinkCompleted;
 
         GraphMode Mode { get; }
+        NodeType NodeMode { get; }
         IGXLogicCore<Node, Link, Graph> LogicCore { get; }
     }
 }

@@ -10,9 +10,10 @@ namespace Router.Model
         public bool IsInRoute { get; set; }
         public bool IsOutRoute { get; set; }
 
-        public Node(string name) : base()
+        public Node(string name, NodeType type = NodeType.Terminal) : base()
         {
             Name = name;
+            Type = type;
         }
 
         public Node(long id, string name, NodeType type = NodeType.Terminal)
