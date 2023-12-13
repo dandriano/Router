@@ -1,6 +1,7 @@
 ﻿using GraphX.Common.Models;
 using Router.Enums;
 using System;
+using System.Windows;
 
 namespace Router.Model
 {
@@ -12,9 +13,14 @@ namespace Router.Model
         public LinkType Type { get; private set; }
         protected Link BackwardLink { get; private set; }
 
+        public Visibility SourcePointerVisibility => Type == LinkType.Duplex ? Visibility.Visible : Visibility.Collapsed;
+
         public Link(Node source, Node target, long weight = 1) : base(source, target, weight)
         {
-            Type = LinkType.Simplex;
+            Random random = new Random(DateTime.Now.Millisecond);
+            Type = (random.Next(2) == 0)
+                ? LinkType.Simplex
+                : LinkType.Duplex;
             // SourceConnectionPointId = 1;
             // TargetConnectionPointId = 1;
         }

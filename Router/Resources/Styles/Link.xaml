@@ -28,6 +28,13 @@
                                   Fill="{TemplateBinding Foreground}"
                                   Stretch="Uniform" />
                         </graph:DefaultEdgePointer>
+                        <graph:DefaultEdgePointer x:Name="PART_EdgePointerForSource" NeedRotation="true" Visibility="{Binding SourcePointerVisibility}">
+                            <Path Width="10"
+                                  Height="10"
+                                  Data="M0,0.5 L1,1 1,0"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform" />
+                        </graph:DefaultEdgePointer>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
