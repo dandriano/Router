@@ -194,4 +194,6 @@
     </Style>
 
     <mi:OpenModeConverter x:Key="OpenModeConverter"/>
+    <mi:GraphModeConverter x:Key="GraphModeConverter"/>
+    <mi:NodeModeConverter x:Key="NodeModeConverter"/>
 </ResourceDictionary>

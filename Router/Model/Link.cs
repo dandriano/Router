@@ -11,18 +11,14 @@ namespace Router.Model
     public class Link : EdgeBase<Node>
     {
         public LinkType Type { get; private set; }
+        public FiberType FiberType { get; private set; }
         protected Link BackwardLink { get; private set; }
-
         public Visibility SourcePointerVisibility => Type == LinkType.Duplex ? Visibility.Visible : Visibility.Collapsed;
 
-        public Link(Node source, Node target, long weight = 1) : base(source, target, weight)
+        public Link(Node source, Node target, long weight = 1, LinkType linkType = LinkType.Simplex, FiberType fiberType = FiberType.SSMF) : base(source, target, weight)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
-            Type = (random.Next(2) == 0)
-                ? LinkType.Simplex
-                : LinkType.Duplex;
-            // SourceConnectionPointId = 1;
-            // TargetConnectionPointId = 1;
+            Type = linkType;
+            FiberType = fiberType;
         }
 
         public void SetDuplex(Link backward)
@@ -36,7 +32,7 @@ namespace Router.Model
             Type = LinkType.Duplex;
         }
 
-        public void SetSimplex() 
+        public void SetSimplex()
         {
             if (Type != LinkType.Duplex)
             {

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:e="clr-namespace:Router.Enums"
              xmlns:c="clr-namespace:Router.Controls"
              xmlns:v="clr-namespace:Router.Views"
              xmlns:prism="http://prismlibrary.com/"
@@ -20,40 +21,28 @@
         </Grid.RowDefinitions>
 
         <m:DrawerHost Grid.Row="0" 
-                      IsRightDrawerOpen="{Binding InEditMode}" 
+                      IsRightDrawerOpen="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
                       RightDrawerBackground="Transparent"
                       OpenMode="Standard">
             <m:DrawerHost.RightDrawerContent>
                 <StackPanel Orientation="Horizontal">
-                    <ToggleButton Style="{StaticResource TerminalMode}" 
-                              IsEnabled="{Binding InEditMode}"
-                              IsChecked="{Binding InTerminalNodeMode}"
-                              Command="{Binding SetTerminalNodeMode}"
-                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                              MinWidth="105"/>
-                    <ToggleButton Style="{StaticResource OLAMode}"
-                            IsEnabled="{Binding InEditMode}"
-                            IsChecked="{Binding InOLANodeMode}"
-                            Command="{Binding SetOLANodeMode}"
-                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                            MinWidth="105"/>
-                    <ToggleButton Style="{StaticResource ROADMMode}"
-                            IsEnabled="{Binding InEditMode}"
-                            IsChecked="{Binding InROADMNodeMode}"
-                            Command="{Binding SetROADMNodeMode}"
-                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                            MinWidth="105"/>
+                    <RadioButton Style="{StaticResource TerminalMode}" 
+                              IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                              IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.Terminal}}"/>
+                    <RadioButton Style="{StaticResource OLAMode}"
+                            IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                            IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.OLA}}"/>
+                    <RadioButton Style="{StaticResource ROADMMode}"
+                            IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                            IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.ROADM}}"/>
                 </StackPanel>
             </m:DrawerHost.RightDrawerContent>
             <StackPanel Orientation="Horizontal">
-                <ToggleButton Style="{StaticResource SelectMode}"
-                            IsChecked="{Binding InSelectMode}"
-                            Command="{Binding SetSelectMode}"
-                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
-                <ToggleButton Style="{StaticResource EditMode}"
-                            IsChecked="{Binding InEditMode}"
-                            Command="{Binding SetEditMode}"
-                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
+              
+                <RadioButton Style="{StaticResource SelectMode}"
+                             IsChecked="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Select}}"/>
+                <RadioButton Style="{StaticResource EditMode}"
+                             IsChecked="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}"/>
             </StackPanel>
         </m:DrawerHost>
 

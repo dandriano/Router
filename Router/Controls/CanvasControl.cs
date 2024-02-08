@@ -42,11 +42,8 @@ namespace Router.Controls
 
         private void GraphModeChanged(GraphMode mode)
         {
-
             switch (mode)
             {
-                case GraphMode.None:
-                    break;
                 case GraphMode.Select:
                     Cursor = Cursors.Hand;
                     break;

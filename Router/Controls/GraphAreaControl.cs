@@ -26,8 +26,6 @@ namespace Router.Controls
         {
             switch (((IGraphViewModel)DataContext).Mode)
             {
-                case GraphMode.None:
-                    break;
                 case GraphMode.Select:
                     if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
                     {
@@ -59,8 +57,6 @@ namespace Router.Controls
         {
             switch (mode)
             {
-                case GraphMode.None:
-                    break;
                 case GraphMode.Select:
                     SetVerticesDrag(true, true);
                     SetEdgesDrag(true);
@@ -116,7 +112,7 @@ namespace Router.Controls
             var targetControl = VertexList[link.Target];
 
             var linkControl = new EdgeControl(sourceControl, targetControl, link);
-            
+
             AddEdgeAndData(link, linkControl, true);
             UpdateAllEdges();
         }
