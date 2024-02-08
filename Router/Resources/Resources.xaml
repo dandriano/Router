@@ -3,10 +3,5 @@
         <ResourceDictionary Source="/Resources/Styles/Node.xaml"/>
         <ResourceDictionary Source="/Resources/Styles/Link.xaml"/>
         <ResourceDictionary Source="/Resources/Styles/Misc.xaml"/>
-        <!-- 
-            Aero support
-            https://stackoverflow.com/questions/2075720/windows-7-theme-for-wpf
-        -->
-        <ResourceDictionary Source="/PresentationFramework.Aero;component/themes/Aero.NormalColor.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

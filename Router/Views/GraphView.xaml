@@ -19,7 +19,6 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-
         <m:DrawerHost Grid.Row="0" 
                       IsRightDrawerOpen="{Binding InEditMode}" 
                       RightDrawerBackground="Transparent"
@@ -60,7 +59,8 @@
 
         <m:DrawerHost Grid.Row="1"
                       IsRightDrawerOpen="{Binding InNodeViewMode}" 
-                      RightDrawerBackground="Transparent">
+                      RightDrawerBackground="Transparent"
+                      OpenMode="{Binding Mode, Converter={StaticResource OpenModeConverter}}">
             <m:DrawerHost.RightDrawerContent>
                 <v:NodeView DataContext="{Binding SelectedNode}"/>
             </m:DrawerHost.RightDrawerContent>

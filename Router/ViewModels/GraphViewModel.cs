@@ -146,6 +146,7 @@ namespace Router.ViewModels
                 if ((bool)check)
                 {
                     InSelectMode = false;
+                    InNodeViewMode = false;
                     Mode = GraphMode.Edit;
                 }
                 else
@@ -209,6 +210,7 @@ namespace Router.ViewModels
                 case GraphMode.None:
                     break;
                 case GraphMode.Select:
+                    InNodeViewMode = false;
                     break;
                 case GraphMode.Edit:
                     var pos = e.GetPosition((UIElement)e.Source);
@@ -230,10 +232,8 @@ namespace Router.ViewModels
                 case GraphMode.None:
                     break;
                 case GraphMode.Select:
-                    /*
                     SelectedNode = e.VertexControl.GetDataVertex<Node>();
                     InNodeViewMode = true;
-                    */
                     break;
                 case GraphMode.Edit:
                     var pos = e.MouseArgs.GetPosition((IInputElement)e.VertexControl.Parent);
