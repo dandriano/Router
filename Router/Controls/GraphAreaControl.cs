@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Router.Controls
 {
-    public class GraphAreaControl : GraphArea<Node, Link, Graph>
+    public class GraphAreaControl : GraphArea<Node, Link, Network>
     {
         public GraphAreaControl()
         {
@@ -36,21 +36,8 @@ namespace Router.Controls
                             SwitchTagged(args.VertexControl);
                         }
                     }
-                    else if (args.MouseArgs.RightButton == MouseButtonState.Pressed)
-                    {
-                        var nc = (NodeControl)args.VertexControl;
-                        if (nc.ShowView) return;
-                        // temporary disabled
-                        // nc.ContextMenu.IsOpen = true;
-                    }
                     break;
                 case GraphMode.Edit:
-                    if (args.MouseArgs.RightButton != MouseButtonState.Pressed) return;
-                    {
-                        var nc = (NodeControl)args.VertexControl;
-                        if (nc.ShowView) return;
-                        nc.ContextMenu.IsOpen = true;
-                    }
                     break;
             }
         }
@@ -75,10 +62,6 @@ namespace Router.Controls
                 case GraphMode.None:
                     break;
                 case GraphMode.Select:
-                    VertexList.Values
-                        .Where(c => ((NodeControl)c).ShowView == true)
-                        .ForEach(SwitchView);
-
                     SetVerticesDrag(true, true);
                     SetEdgesDrag(true);
                     break;
@@ -117,19 +100,9 @@ namespace Router.Controls
             }
         }
 
-        private void SwitchView(VertexControl nodeControl)
-        {
-            var node = (NodeControl)nodeControl;
-            node.ShowView = !node.ShowView;
-        }
-
         private void AddNode(Node node, Point pos)
         {
-            var nodeControl = new NodeControl(node)
-            {
-                // drop control with node view by default
-                // ShowView = true
-            };
+            var nodeControl = new NodeControl(node);
             pos = ((UIElement)Parent).TranslatePoint(pos, this);
             pos.Offset(-20, -20);
             nodeControl.SetPosition(pos.X, pos.Y);

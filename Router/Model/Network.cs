@@ -6,12 +6,14 @@ using System.Linq;
 
 namespace Router.Model
 {
-    public class Graph : BidirectionalGraph<Node, Link>
+    /// <summary>
+    /// Network as bidirectional graph
+    /// </summary>
+    public class Network : BidirectionalGraph<Node, Link>
     {
         #region [Routing]
         public IEnumerable<IEnumerable<Link>> CalculateByYen(Node startingRoot, Node target, int maxRouteCount = 10)
         {
-            // создаем массив для маршрутов
             var edgeRoutes = new List<List<Link>>();
 
             // вычисляем кратчайший маршрут в графе по дейкстре 

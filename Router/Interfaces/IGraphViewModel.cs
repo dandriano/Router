@@ -16,6 +16,6 @@ namespace Router.Interfaces
 
         GraphMode Mode { get; }
         NodeType NodeMode { get; }
-        IGXLogicCore<Node, Link, Graph> LogicCore { get; }
+        IGXLogicCore<Node, Link, Network> LogicCore { get; }
     }
 }

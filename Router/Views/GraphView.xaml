@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:c="clr-namespace:Router.Controls"
+             xmlns:v="clr-namespace:Router.Views"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -12,79 +14,73 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <StackPanel Grid.Row="0" 
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3">
-            <StackPanel Orientation="Horizontal">
-                <ToggleButton Style="{StaticResource SelectMode}" 
-                              IsChecked="{Binding InSelectMode}"
-                              Command="{Binding SetSelectMode}"
-                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                              MinWidth="105"/>
-                <ToggleButton Style="{StaticResource EditMode}"
-                              IsChecked="{Binding InEditMode}"
-                              Command="{Binding SetEditMode}"
-                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                              MinWidth="105"/>
-            </StackPanel>
-            <Separator />
-        </StackPanel>
 
-        <StackPanel Grid.Row="1" 
-                    Grid.Column="0"
-                    Orientation="Horizontal">
-            <StackPanel>
-                <ToggleButton Style="{StaticResource TerminalMode}" 
+
+        <m:DrawerHost Grid.Row="0" 
+                      IsRightDrawerOpen="{Binding InEditMode}" 
+                      RightDrawerBackground="Transparent"
+                      OpenMode="Standard">
+            <m:DrawerHost.RightDrawerContent>
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton Style="{StaticResource TerminalMode}" 
                               IsEnabled="{Binding InEditMode}"
                               IsChecked="{Binding InTerminalNodeMode}"
                               Command="{Binding SetTerminalNodeMode}"
                               CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
                               MinWidth="105"/>
-                <ToggleButton Style="{StaticResource OLAMode}"
-                              IsEnabled="{Binding InEditMode}"
-                              IsChecked="{Binding InOLANodeMode}"
-                              Command="{Binding SetOLANodeMode}"
-                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                              MinWidth="105"/>
-                <ToggleButton Style="{StaticResource ROADMMode}"
-                              IsEnabled="{Binding InEditMode}"
-                              IsChecked="{Binding InROADMNodeMode}"
-                              Command="{Binding SetROADMNodeMode}"
-                              CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-                              MinWidth="105"/>
+                    <ToggleButton Style="{StaticResource OLAMode}"
+                            IsEnabled="{Binding InEditMode}"
+                            IsChecked="{Binding InOLANodeMode}"
+                            Command="{Binding SetOLANodeMode}"
+                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                            MinWidth="105"/>
+                    <ToggleButton Style="{StaticResource ROADMMode}"
+                            IsEnabled="{Binding InEditMode}"
+                            IsChecked="{Binding InROADMNodeMode}"
+                            Command="{Binding SetROADMNodeMode}"
+                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                            MinWidth="105"/>
+                </StackPanel>
+            </m:DrawerHost.RightDrawerContent>
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton Style="{StaticResource SelectMode}"
+                            IsChecked="{Binding InSelectMode}"
+                            Command="{Binding SetSelectMode}"
+                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
+                <ToggleButton Style="{StaticResource EditMode}"
+                            IsChecked="{Binding InEditMode}"
+                            Command="{Binding SetEditMode}"
+                            CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"/>
             </StackPanel>
-            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-        </StackPanel>
+        </m:DrawerHost>
 
-        <c:CanvasControl Grid.Row="1"
-                         Grid.Column="1"
-                         ViewFinderVisibility="Collapsed">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDown">
-                    <prism:InvokeCommandAction Command="{Binding CanvasInteraction}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <c:GraphAreaControl >
+        <m:DrawerHost Grid.Row="1"
+                      IsRightDrawerOpen="{Binding InNodeViewMode}" 
+                      RightDrawerBackground="Transparent">
+            <m:DrawerHost.RightDrawerContent>
+                <v:NodeView DataContext="{Binding SelectedNode}"/>
+            </m:DrawerHost.RightDrawerContent>
+            <c:CanvasControl ViewFinderVisibility="Collapsed">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="VertexSelected">
-                        <prism:InvokeCommandAction Command="{Binding NodeSelected}" />
+                    <i:EventTrigger EventName="MouseDown">
+                        <prism:InvokeCommandAction Command="{Binding CanvasInteraction}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </c:GraphAreaControl>
-        </c:CanvasControl>
+                <c:GraphAreaControl >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="VertexSelected">
+                            <prism:InvokeCommandAction Command="{Binding NodeSelected}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </c:GraphAreaControl>
+            </c:CanvasControl>
+        </m:DrawerHost>
 
         <StackPanel Grid.Row="2"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
                     VerticalAlignment="Bottom">
             <Separator />
             <StatusBar Background="Beige" >

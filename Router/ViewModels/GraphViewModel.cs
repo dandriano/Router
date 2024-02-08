@@ -18,7 +18,7 @@ namespace Router.ViewModels
     public class GraphViewModel : BindableBase, IGraphViewModel
     {
         private PendingLink _pendingLink;
-        public IGXLogicCore<Node, Link, Graph> LogicCore { get; private set; }
+        public IGXLogicCore<Node, Link, Network> LogicCore { get; private set; }
         #region [Commands and Events]
         public DelegateCommand Initialize { get; private set; }
         public DelegateCommand<object> SetSelectMode { get; private set; }
@@ -38,6 +38,13 @@ namespace Router.ViewModels
         #region [Observables]
         public ObservableCollection<Node> Nodes { get; private set; } = new ObservableCollection<Node>();
         public ObservableCollection<Link> Links { get; private set; } = new ObservableCollection<Link>();
+
+        private Node _selectedNode;
+        public Node SelectedNode
+        {
+            get => _selectedNode;
+            set => SetProperty(ref _selectedNode, value);
+        }
 
         private GraphMode _mode;
         public GraphMode Mode
@@ -95,10 +102,17 @@ namespace Router.ViewModels
             get => _inROADMNodeMode;
             set => SetProperty(ref _inROADMNodeMode, value);
         }
+
+        private bool _inNodeViewMode;
+        public bool InNodeViewMode
+        {
+            get => _inNodeViewMode;
+            set => SetProperty(ref _inNodeViewMode, value);
+        }
         #endregion
         public GraphViewModel()
         {
-            LogicCore = new GXLogicCore<Node, Link, Graph>(new Graph())
+            LogicCore = new GXLogicCore<Node, Link, Network>(new Network())
             {
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
                 DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA,
@@ -118,6 +132,7 @@ namespace Router.ViewModels
                 if ((bool)check)
                 {
                     InEditMode = false;
+                    InNodeViewMode = false;
                     Mode = GraphMode.Select;
                 }
                 else
@@ -200,25 +215,31 @@ namespace Router.ViewModels
                     var node = AddNode($"#{Nodes.Count + 1} Node", NodeMode);
 
                     NodeRequested.Invoke(node, pos);
+                    SelectedNode = node;
+                    InNodeViewMode = true;
                     break;
             }
         }
 
-        private void OnNodeSelected(VertexSelectedEventArgs a)
+        private void OnNodeSelected(VertexSelectedEventArgs e)
         {
-            if (a.MouseArgs.LeftButton != MouseButtonState.Pressed) return;
+            if (e.MouseArgs.LeftButton != MouseButtonState.Pressed) return;
 
             switch (Mode)
             {
                 case GraphMode.None:
                     break;
                 case GraphMode.Select:
+                    /*
+                    SelectedNode = e.VertexControl.GetDataVertex<Node>();
+                    InNodeViewMode = true;
+                    */
                     break;
                 case GraphMode.Edit:
-                    var pos = a.MouseArgs.GetPosition((IInputElement)a.VertexControl.Parent);
+                    var pos = e.MouseArgs.GetPosition((IInputElement)e.VertexControl.Parent);
                     if (_pendingLink != default)
                     {
-                        _pendingLink.SetTarget(a.VertexControl);
+                        _pendingLink.SetTarget(e.VertexControl);
                         // prevent self-loop
                         if (_pendingLink.Source.ID == _pendingLink.Target.ID) return;
                         PendingLinkCompleted?.Invoke(_pendingLink);
@@ -229,7 +250,7 @@ namespace Router.ViewModels
                     }
                     else
                     {
-                        _pendingLink = new PendingLink(a.VertexControl, pos.X, pos.Y, new SolidColorBrush(Colors.Blue));
+                        _pendingLink = new PendingLink(e.VertexControl, pos.X, pos.Y, new SolidColorBrush(Colors.Blue));
                         PendingLinkRequested?.Invoke(_pendingLink);
                     }
                     break;

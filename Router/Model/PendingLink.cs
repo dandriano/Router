@@ -21,7 +21,6 @@ namespace Router.Model
             TargetPos = new Point(x, y);
             Source = sourcePoint.GetDataVertex<Node>();
             SourcePoint = (NodeControl)sourcePoint;
-            SourcePoint.ShowView = false;
         }
 
         internal void UpdateTargetPosition(Point point)
@@ -33,7 +32,6 @@ namespace Router.Model
         internal void SetTarget(VertexControl nodeControl)
         {
             TargetPoint = (NodeControl)nodeControl;
-            TargetPoint.ShowView = false;
             Target = nodeControl?.GetDataVertex<Node>();
         }
 

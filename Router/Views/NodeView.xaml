@@ -27,17 +27,20 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <GroupBox Header="ID"
+        <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                  Header="ID"
                   Grid.Row="0">
-            <c:DefaultTextTextBox DefaultText="ID for a new node" Text="{Binding ID}" />
+            <c:DefaultTextTextBox Style="{StaticResource CustomTextBox}" DefaultText="ID for a new node" Text="{Binding ID}" />
         </GroupBox>
-        <GroupBox Header="Name"
+        <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                  Header="Name"
                   Grid.Row="1">
-            <c:DefaultTextTextBox DefaultText="Name for a new node" Text="{Binding Name}" />
+            <c:DefaultTextTextBox Style="{StaticResource CustomTextBox}" DefaultText="Name for a new node" Text="{Binding Name}" />
         </GroupBox>
-        <GroupBox Header="Type"
+        <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                  Header="Type"
                   Grid.Row="2">
-            <ComboBox ItemsSource="{Binding Source={StaticResource NodeTypes}}" SelectedItem="{Binding Type}" />
+            <ComboBox Style="{StaticResource MaterialDesignComboBox}" ItemsSource="{Binding Source={StaticResource NodeTypes}}" SelectedItem="{Binding Type}" />
         </GroupBox>
     </Grid>
 </UserControl>

@@ -3,6 +3,9 @@ using Router.Enums;
 
 namespace Router.Model
 {
+    /// <summary>
+    /// Representation of a network node on a graph
+    /// </summary>
     public class Node : VertexBase
     {
         public string Name { get; set; }
