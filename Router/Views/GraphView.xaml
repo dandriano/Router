@@ -63,11 +63,11 @@
         </m:DrawerHost>
 
         <m:DrawerHost Grid.Row="1"
-                      IsRightDrawerOpen="{Binding InNodeViewMode}" 
+                      IsRightDrawerOpen="{Binding InDrawerViewMode}" 
                       RightDrawerBackground="Transparent"
                       OpenMode="{Binding Mode, Converter={StaticResource OpenModeConverter}}">
             <m:DrawerHost.RightDrawerContent>
-                <v:NodeView DataContext="{Binding SelectedNode}"/>
+                <ContentPresenter Content="{Binding SelectedElement}"/>
             </m:DrawerHost.RightDrawerContent>
             <c:CanvasControl ViewFinderVisibility="Collapsed">
                 <i:Interaction.Triggers>

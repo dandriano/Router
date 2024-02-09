@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="clr-namespace:Router.Model"
+                    xmlns:v="clr-namespace:Router.Views"
                     xmlns:graph="http://schemas.panthernet.ru/graphx/">
 
     <Style TargetType="{x:Type graph:EdgeControl}">
@@ -64,4 +66,8 @@
         </Setter>
         <Setter Property="DisplayForSelfLoopedEdges" Value="False"/>
     </Style>
+
+    <DataTemplate DataType="{x:Type m:Link}">
+        <v:ConeView/>
+    </DataTemplate>
 </ResourceDictionary>

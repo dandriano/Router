@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace Router.ViewModels
 {
@@ -35,11 +36,11 @@ namespace Router.ViewModels
         public ObservableCollection<Node> Nodes { get; private set; } = new ObservableCollection<Node>();
         public ObservableCollection<Link> Links { get; private set; } = new ObservableCollection<Link>();
 
-        private Node _selectedNode;
-        public Node SelectedNode
+        private dynamic _selectedElement;
+        public dynamic SelectedElement
         {
-            get => _selectedNode;
-            set => SetProperty(ref _selectedNode, value);
+            get => _selectedElement;
+            set => SetProperty(ref _selectedElement, value);
         }
 
         private GraphMode _mode;
@@ -71,11 +72,11 @@ namespace Router.ViewModels
             set => SetProperty(ref _linkMode, value);
         }
 
-        private bool _inNodeViewMode;
-        public bool InNodeViewMode
+        private bool _inDrawerViewMode;
+        public bool InDrawerViewMode
         {
-            get => _inNodeViewMode;
-            set => SetProperty(ref _inNodeViewMode, value);
+            get => _inDrawerViewMode;
+            set => SetProperty(ref _inDrawerViewMode, value);
         }
         #endregion
         #endregion
@@ -108,15 +109,15 @@ namespace Router.ViewModels
             switch (Mode)
             {
                 case GraphMode.Select:
-                    InNodeViewMode = false;
+                    InDrawerViewMode = false;
                     break;
                 case GraphMode.Edit:
                     var pos = e.GetPosition((UIElement)e.Source);
                     var node = AddNode($"#{Nodes.Count + 1} Node", NodeMode);
 
                     NodeRequested.Invoke(node, pos);
-                    SelectedNode = node;
-                    InNodeViewMode = true;
+                    SelectedElement = node;
+                    InDrawerViewMode = true;
                     break;
             }
         }
@@ -128,8 +129,8 @@ namespace Router.ViewModels
             switch (Mode)
             {
                 case GraphMode.Select:
-                    SelectedNode = e.VertexControl.GetDataVertex<Node>();
-                    InNodeViewMode = true;
+                    SelectedElement = e.VertexControl.GetDataVertex<Node>();
+                    InDrawerViewMode = true;
                     break;
                 case GraphMode.Edit:
                     var pos = e.MouseArgs.GetPosition((IInputElement)e.VertexControl.Parent);
@@ -143,6 +144,9 @@ namespace Router.ViewModels
                         var link = AddLink(_pendingLink.Source, _pendingLink.Target, 100, LinkMode);
                         LinkRequested?.Invoke(link);
                         _pendingLink = null;
+
+                        SelectedElement = link;
+                        InDrawerViewMode = true;
                     }
                     else
                     {

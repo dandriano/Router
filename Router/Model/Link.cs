@@ -22,7 +22,7 @@ namespace Router.Model
         }
 
         public LinkType Type { get; private set; }
-        public FiberType FiberType { get; private set; }
+        public FiberType FiberType { get; set; }
         public Link BackwardLink { get; private set; }
         public Visibility SourcePointerVisibility => Type == LinkType.Duplex ? Visibility.Visible : Visibility.Collapsed;
 

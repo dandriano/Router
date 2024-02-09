@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:graph="http://schemas.panthernet.ru/graphx/"
-                    xmlns:c="clr-namespace:Router.Controls">
+                    xmlns:c="clr-namespace:Router.Controls"
+                    xmlns:m="clr-namespace:Router.Model"
+                    xmlns:v="clr-namespace:Router.Views">
 
     <!-- Node specific brushes -->
     <SolidColorBrush x:Key="Node.Warning.On" Color="Red"/>
@@ -126,4 +128,8 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <DataTemplate DataType="{x:Type m:Node}">
+        <v:NodeView/>
+    </DataTemplate>
 </ResourceDictionary>
