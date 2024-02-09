@@ -10,37 +10,34 @@ namespace Router.Model
     /// </summary>
     public class Link : EdgeBase<Node>
     {
+        public static Link Create(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
+        {
+            var forward = new Link(source, target, weight, fiberType);
+            var backward = new Link(target, source, weight, fiberType);
+
+            forward.SetPair(backward, linkType);
+            backward.SetPair(forward, linkType);
+
+            return forward;
+        }
+
         public LinkType Type { get; private set; }
         public FiberType FiberType { get; private set; }
-        protected Link BackwardLink { get; private set; }
+        public Link BackwardLink { get; private set; }
         public Visibility SourcePointerVisibility => Type == LinkType.Duplex ? Visibility.Visible : Visibility.Collapsed;
 
-        public Link(Node source, Node target, long weight = 1, LinkType linkType = LinkType.Simplex, FiberType fiberType = FiberType.SSMF) : base(source, target, weight)
+        protected Link(Node source, Node target, long weight, FiberType fiberType = FiberType.SSMF) : base(source, target, weight)
         {
-            Type = linkType;
+            Type = LinkType.None;
             FiberType = fiberType;
         }
 
-        public void SetDuplex(Link backward)
+        private void SetPair(Link backward, LinkType linkType)
         {
-            if (Type != LinkType.Simplex)
-            {
-                throw new Exception("Already duplex");
-            }
+            if (Type == linkType) throw new Exception($"Already {linkType}");
 
             BackwardLink = backward;
-            Type = LinkType.Duplex;
-        }
-
-        public void SetSimplex()
-        {
-            if (Type != LinkType.Duplex)
-            {
-                throw new Exception("Already simplex");
-            }
-
-            BackwardLink = null;
-            Type = LinkType.Simplex;
+            Type = linkType;
         }
     }
 }

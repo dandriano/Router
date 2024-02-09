@@ -140,7 +140,7 @@ namespace Router.ViewModels
                         if (_pendingLink.Source.ID == _pendingLink.Target.ID) return;
                         PendingLinkCompleted?.Invoke(_pendingLink);
 
-                        var link = AddLink(_pendingLink.Source, _pendingLink.Target);
+                        var link = AddLink(_pendingLink.Source, _pendingLink.Target, 100, LinkMode);
                         LinkRequested?.Invoke(link);
                         _pendingLink = null;
                     }
@@ -161,9 +161,9 @@ namespace Router.ViewModels
             return node;
         }
 
-        private Link AddLink(Node source, Node target, long weight = 1, LinkType linkType = LinkType.Simplex, FiberType fiberType = FiberType.SSMF)
+        private Link AddLink(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
         {
-            var link = new Link(source, target, weight);
+            var link = Link.Create(source, target, weight, linkType, fiberType); ;
             Links.Add(link);
 
             return link;

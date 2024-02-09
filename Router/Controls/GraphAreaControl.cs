@@ -5,6 +5,7 @@ using GraphX.Controls.Models;
 using Router.Enums;
 using Router.Interfaces;
 using Router.Model;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -111,9 +112,24 @@ namespace Router.Controls
             var sourceControl = VertexList[link.Source];
             var targetControl = VertexList[link.Target];
 
-            var linkControl = new EdgeControl(sourceControl, targetControl, link);
+            switch (link.Type)
+            {
+                case LinkType.None:
+                    throw new NotImplementedException();
+                case LinkType.Simplex:
+                    var simplexForward = new EdgeControl(sourceControl, targetControl, link);
+                    var simplexBackward = new EdgeControl(targetControl, sourceControl, link.BackwardLink);
 
-            AddEdgeAndData(link, linkControl, true);
+                    AddEdgeAndData(link, simplexForward, true);
+                    AddEdgeAndData(link.BackwardLink, simplexBackward, true);
+                    break;
+                case LinkType.Duplex:
+                    var duplexControl = new EdgeControl(sourceControl, targetControl, link);
+
+                    AddEdgeAndData(link, duplexControl, true);
+                    break;
+            }
+
             UpdateAllEdges();
         }
     }

@@ -2,6 +2,7 @@
 {
     public enum LinkType
     {
+        None,
         Simplex,
         Duplex
     }
