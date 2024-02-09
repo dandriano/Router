@@ -26,15 +26,31 @@
                       OpenMode="Standard">
             <m:DrawerHost.RightDrawerContent>
                 <StackPanel Orientation="Horizontal">
+                    <m:Chip Content="Nodes:"
+                            VerticalAlignment="Center"/>
                     <RadioButton Style="{StaticResource TerminalMode}" 
-                              IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
-                              IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.Terminal}}"/>
+                                 GroupName="Nodes"
+                                 IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                                 IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.Terminal}}"/>
                     <RadioButton Style="{StaticResource OLAMode}"
-                            IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
-                            IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.OLA}}"/>
+                                 GroupName="Nodes"
+                                 IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                                 IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.OLA}}"/>
                     <RadioButton Style="{StaticResource ROADMMode}"
-                            IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
-                            IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.ROADM}}"/>
+                                 GroupName="Nodes"
+                                 IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                                 IsChecked="{Binding NodeMode, Converter={StaticResource NodeModeConverter}, ConverterParameter={x:Static e:NodeType.ROADM}}"/>
+
+                    <m:Chip Content="Spans:"
+                            VerticalAlignment="Center"/>
+                    <RadioButton Style="{StaticResource SimplexMode}"
+                                 GroupName="Links"
+                                 IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                                 IsChecked="{Binding LinkMode, Converter={StaticResource LinkModeConverter}, ConverterParameter={x:Static e:LinkType.Simplex}}"/>
+                    <RadioButton Style="{StaticResource DuplexMode}" 
+                                 GroupName="Links"
+                                 IsEnabled="{Binding Mode, Converter={StaticResource GraphModeConverter}, ConverterParameter={x:Static e:GraphMode.Edit}}" 
+                                 IsChecked="{Binding LinkMode, Converter={StaticResource LinkModeConverter}, ConverterParameter={x:Static e:LinkType.Duplex}}"/>
                 </StackPanel>
             </m:DrawerHost.RightDrawerContent>
             <StackPanel Orientation="Horizontal">

@@ -24,7 +24,7 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center" 
                                Content="Select"/>
-                        <m:PackIcon Kind="ArrowTopRight" VerticalAlignment="Center"/>
+                        <m:PackIcon Kind="ArrowAll" VerticalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
             </Setter.Value>
@@ -154,6 +154,44 @@
         </Setter>
     </Style>
 
+    <Style x:Key="SimplexMode" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CustomToggleButton}">
+        <Setter Property="HorizontalContentAlignment" Value="Right"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Style="{StaticResource MaterialDesignLabel}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" 
+                               Content="Simplex"/>
+                        <m:PackIcon Kind="SwapVertical" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DuplexMode" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CustomToggleButton}">
+        <Setter Property="HorizontalContentAlignment" Value="Right"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Style="{StaticResource MaterialDesignLabel}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center" 
+                               Content="Duplex"/>
+                        <m:PackIcon Kind="ArrowUpDown" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- https://stackoverflow.com/a/10428804/6634373 -->
     <Style x:Key="CustomTextBox" TargetType="{x:Type c:DefaultTextTextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
         <Setter Property="Template">
@@ -196,4 +234,5 @@
     <mi:OpenModeConverter x:Key="OpenModeConverter"/>
     <mi:GraphModeConverter x:Key="GraphModeConverter"/>
     <mi:NodeModeConverter x:Key="NodeModeConverter"/>
+    <mi:LinkModeConverter x:Key="LinkModeConverter"/>
 </ResourceDictionary>

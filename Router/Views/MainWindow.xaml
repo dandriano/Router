@@ -14,7 +14,9 @@
         FontFamily="{m:MaterialDesignFont}">
 
     <Grid>
-        <m:ColorZone Padding="5" m:ElevationAssist.Elevation="Dp2"  Mode="PrimaryLight">
+        <m:ColorZone Padding="5" 
+                     m:ElevationAssist.Elevation="Dp2"
+                     Mode="PrimaryLight">
             <v:GraphView/>
         </m:ColorZone>
     </Grid>

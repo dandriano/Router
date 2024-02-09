@@ -64,6 +64,13 @@ namespace Router.ViewModels
             set => SetProperty(ref _nodeMode, value);
         }
 
+        private LinkType _linkMode;
+        public LinkType LinkMode
+        {
+            get => _linkMode;
+            set => SetProperty(ref _linkMode, value);
+        }
+
         private bool _inNodeViewMode;
         public bool InNodeViewMode
         {
@@ -88,6 +95,7 @@ namespace Router.ViewModels
 
             Mode = GraphMode.Select;
             NodeMode = NodeType.Terminal;
+            LinkMode = LinkType.Simplex;
 
             NodeSelected = new DelegateCommand<VertexSelectedEventArgs>(OnNodeSelected);
             CanvasInteraction = new DelegateCommand<MouseButtonEventArgs>(OnCanvasInteraction);
