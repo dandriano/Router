@@ -7,10 +7,10 @@
     <Style x:Key="CustomToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
+                <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
             </Trigger>
             <Trigger Property="IsChecked" Value="False">
-                <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
             </Trigger>
         </Style.Triggers>
     </Style>

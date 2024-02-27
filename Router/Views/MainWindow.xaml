@@ -15,8 +15,7 @@
 
     <Grid>
         <m:ColorZone Padding="5" 
-                     m:ElevationAssist.Elevation="Dp2"
-                     Mode="PrimaryLight">
+                     m:ElevationAssist.Elevation="Dp2">
             <v:GraphView/>
         </m:ColorZone>
     </Grid>
