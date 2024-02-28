@@ -167,7 +167,7 @@ namespace Router.ViewModels
 
         private Link AddLink(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
         {
-            var link = Link.Create(source, target, weight, linkType, fiberType); ;
+            var link = Link.Create(source, target, weight, linkType, fiberType);
             Links.Add(link);
 
             return link;
