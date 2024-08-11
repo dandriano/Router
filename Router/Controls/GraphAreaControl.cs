@@ -1,136 +1,140 @@
-﻿using GraphX.Common;
-using GraphX.Common.Enums;
-using GraphX.Controls;
-using GraphX.Controls.Models;
-using Router.Enums;
+﻿using GLGraphs.CartesianGraph;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
+using OpenTK.Wpf;
 using Router.Interfaces;
-using Router.Model;
 using System;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Router.Controls
 {
-    public class GraphAreaControl : GraphArea<Node, Link, Network>
+    public class GraphAreaControl : UserControl
     {
-        public GraphAreaControl()
+        /// <summary>
+        /// Event fired before the graph is updated & rendered.
+        /// </summary>
+        public event Action<TimeSpan> Render;
+        public static readonly DependencyProperty SettingsProperty = DependencyProperty.Register(nameof(Settings), typeof(CartesianGraphSettings), typeof(GraphAreaControl), new PropertyMetadata(default(CartesianGraphSettings)));
+        public CartesianGraphSettings Settings
         {
-            SetVerticesHighlight(true, GraphControlType.VertexAndEdge);
-            SetEdgesHighlight(true, GraphControlType.VertexAndEdge);
-
-            Loaded += OnLoaded;
-            VertexSelected += OnVertexSelected;
+            get => (CartesianGraphSettings)GetValue(SettingsProperty);
+            set => SetValue(SettingsProperty, value);
+        }
+        public static readonly DependencyProperty StateProperty = DependencyProperty.Register(nameof(State), typeof(CartesianGraphState<IVertex>), typeof(GraphAreaControl), new PropertyMetadata(default(CartesianGraphState<IVertex>)));
+        public CartesianGraphState<IVertex> State
+        {
+            get => (CartesianGraphState<IVertex>)GetValue(StateProperty);
+            set => SetValue(StateProperty, value);
+        }
+        public static readonly DependencyProperty VertexRequestedCommand = DependencyProperty.Register(nameof(VertexRequested), typeof(ICommand), typeof(GraphAreaControl), new PropertyMetadata(default(ICommand)));
+        public ICommand VertexRequested
+        {
+            get => (ICommand)GetValue(VertexRequestedCommand);
+            set => SetValue(VertexRequestedCommand, value);
+        }
+        #region [GL]
+        private GLWpfControl _control;
+        private CartesianGraphRenderer<IVertex> _renderer;
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+           
+            var settings = new GLWpfControlSettings();
+            _control = new GLWpfControl();
+            _control.Ready += OnReady;
+            Content = _control;
+            _control.Start(settings);
+        }
+        private void OnReady()
+        {
+            _renderer = new CartesianGraphRenderer<IVertex>(Settings);
+            _control.Render += OnRender;
         }
 
-        private void OnVertexSelected(object sender, VertexSelectedEventArgs args)
+        public void ResetView()
         {
-            switch (((IGraphViewModel)DataContext).Mode)
+            if (State == null)
+                return;
+
+            State.Camera.Target.Position = Vector2.Zero;
+            State.Camera.Target.VerticalSize = 1f;
+            State.IsCameraAutoControlled = true;
+        }
+
+        private Vector2 ClientToView(Point pt)
+        {
+            var result = new Vector2((float)pt.X, (float)pt.Y);
+
+            result.X /= (float)_control.RenderSize.Width;
+            result.Y /= (float)_control.RenderSize.Height;
+
+            return result;
+        }
+
+        private void OnRender(TimeSpan deltaTime)
+        {
+            if (_renderer == null || State == null)
+                return;
+
+            Render?.Invoke(deltaTime);
+            var renderSize = _control.RenderSize;
+            State.ViewportHeight = (float)renderSize.Height;
+            State.ViewportHeight = (float)renderSize.Width;
+
+            GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
+            GL.Viewport(0, 0, (int)renderSize.Width, (int)renderSize.Height);
+
+            float aspectRatio = (float)(renderSize.Width / renderSize.Height);
+            State.Camera.Target.AspectRatio = aspectRatio;
+            State.Camera.Current.AspectRatio = aspectRatio;
+            State.Update((float)deltaTime.TotalSeconds);
+            _renderer.Render(State);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            var pos = ClientToView(e.GetPosition(_control));
+
+            State.MousePosition = pos;
+            if (State.TryGetMouseover(pos, out var targetPt))
             {
-                case GraphMode.Select:
-                    if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
-                    {
-                        if (args.Modifiers == ModifierKeys.Control)
-                        {
-                            SwitchTagged(args.VertexControl);
-                        }
-                    }
-                    break;
-                case GraphMode.Edit:
-                    break;
-            }
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            ((IGraphViewModel)DataContext).GraphModeChanged += OnGraphModeChanged;
-            ((IGraphViewModel)DataContext).NodeRequested += AddNode;
-            ((IGraphViewModel)DataContext).LinkRequested += AddLink;
-            ((IGraphViewModel)DataContext).PendingLinkRequested += OnPendingLinkRequested;
-            ((IGraphViewModel)DataContext).PendingLinkCompleted += OnPendingLinkCompleted;
-
-            var logic = ((IGraphViewModel)DataContext).LogicCore;
-            SetLogicCore(logic);
-            GenerateGraph(logic.Graph);
-        }
-
-        private void OnGraphModeChanged(GraphMode mode)
-        {
-            switch (mode)
-            {
-                case GraphMode.Select:
-                    SetVerticesDrag(true, true);
-                    SetEdgesDrag(true);
-                    break;
-                case GraphMode.Edit:
-                    VertexList.Values
-                        .Where(DragBehaviour.GetIsTagged)
-                        .ForEach(SwitchTagged);
-
-                    SetVerticesDrag(false, false);
-                    SetEdgesDrag(false);
-                    break;
-            }
-        }
-
-        private void OnPendingLinkCompleted(PendingLink pendingLink)
-        {
-            RemoveCustomChildControl(pendingLink.LinkPath);
-        }
-
-        private void OnPendingLinkRequested(PendingLink pendingLink)
-        {
-            InsertCustomChildControl(0, pendingLink.LinkPath);
-        }
-
-        private void SwitchTagged(VertexControl nodeControl)
-        {
-            if (DragBehaviour.GetIsTagged(nodeControl))
-            {
-                HighlightBehaviour.SetHighlighted(nodeControl, false);
-                DragBehaviour.SetIsTagged(nodeControl, false);
+                State.MouseoverTarget = targetPt;
             }
             else
             {
-                HighlightBehaviour.SetHighlighted(nodeControl, true);
-                DragBehaviour.SetIsTagged(nodeControl, true);
+                State.MouseoverTarget = null;
             }
         }
 
-        private void AddNode(Node node, Point pos)
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            var nodeControl = new NodeControl(node);
-            pos = ((UIElement)Parent).TranslatePoint(pos, this);
-            pos.Offset(-20, -20);
-            nodeControl.SetPosition(pos.X, pos.Y);
-            AddVertexAndData(node, nodeControl);
-            nodeControl.OnApplyTemplate();
+            base.OnMouseWheel(e);
+            if (State == null)
+                return;
+
+            var num = (float)e.Delta / 120f;
+            State.Camera.Target.ZoomIn(num * 10f);
+            State.IsCameraAutoControlled = false;
         }
 
-        private void AddLink(Link link)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            var sourceControl = VertexList[link.Source];
-            var targetControl = VertexList[link.Target];
-
-            switch (link.Type)
-            {
-                case LinkType.None:
-                    throw new NotImplementedException();
-                case LinkType.Simplex:
-                    var simplexForward = new EdgeControl(sourceControl, targetControl, link);
-                    var simplexBackward = new EdgeControl(targetControl, sourceControl, link.BackwardLink);
-
-                    AddEdgeAndData(link, simplexForward, true);
-                    AddEdgeAndData(link.BackwardLink, simplexBackward, true);
-                    break;
-                case LinkType.Duplex:
-                    var duplexControl = new EdgeControl(sourceControl, targetControl, link);
-
-                    AddEdgeAndData(link, duplexControl, true);
-                    break;
-            }
-
-            UpdateAllEdges();
+            base.OnMouseUp(e);
+            if (e.ChangedButton == MouseButton.Middle)
+                ResetView();
         }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonUp(e);
+
+            if (VertexRequested.CanExecute(this))
+                VertexRequested.Execute(this);
+        }
+        #endregion
     }
 }

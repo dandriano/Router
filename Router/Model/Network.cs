@@ -1,8 +1,7 @@
-﻿using QuikGraph;
-using QuikGraph.Algorithms.ShortestPath;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GLGraphs.CartesianGraph;
+using OpenTK.Mathematics;
+using QuikGraph;
+using Router.Interfaces;
 
 namespace Router.Model
 {
@@ -11,33 +10,32 @@ namespace Router.Model
     /// </summary>
     public class Network : BidirectionalGraph<Node, Link>
     {
-        public IEnumerable<IEnumerable<Link>> ShortestPathsYen(Node root, Node target, int k,
-            Func<Link, double> edgeWeights = null)
+        public CartesianGraphSettings Settings { get; } = CartesianGraphSettings.Default;
+        public CartesianGraphState<IVertex> State { get; }
+       
+        public Network()
         {
-            edgeWeights ??= (Link e) => { return e.Weight; };
-            var g = Edges
-                .Select(e => (ee: new EquatableTaggedEdge<Node, double>(e.Source, e.Target, edgeWeights(e)), e))
-                .ToList();
+            Settings.BackgroundColor = new Color4(150, 150, 150, 0);
 
-            var algo = new YenShortestPathsAlgorithm<Node>(g.Select(v => v.ee)
-                                                            .ToAdjacencyGraph<Node, EquatableTaggedEdge<Node, double>>(),
-                                                           root,
-                                                           target,
-                                                           k);
+            State = new CartesianGraphState<IVertex>(Settings);
+            State.AddSeries(SeriesType.Point, "VERTICES");
+            State.AddSeries(SeriesType.Line, "EDGES");
+        }
 
-            var result = new List<List<Link>>();
-            foreach (var p in algo.Execute())
-            {
-                var innerResult = new List<Link>();
-                foreach (var e in p)
-                {
-                    var i = g.FindIndex(t => t.ee == e);
-                    innerResult.Add(g[i].e);
-                    g.RemoveAt(i);
-                }
-                result.Add(innerResult);
-            }
-            return result;
+        public override bool AddVertex(Node vertex)
+        {
+            // rescale into view co-ordinates
+            var (x, y) = State.MousePosition * 2.0f - Vector2.One;
+
+            // project mouse into world
+            var vpMat = State.Camera.Current.ViewProjection;
+            vpMat = Matrix4.CreateScale(1.0f, State.YScale, 1.0f) * vpMat;
+            vpMat.Invert();
+
+            var worldPos = (new Vector4(x, -y, 0, 1) * vpMat).Xy;
+            State.Series[0].Add(vertex, worldPos.X, worldPos.Y);
+
+            return base.AddVertex(vertex);
         }
     }
 }

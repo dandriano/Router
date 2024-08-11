@@ -1,30 +1,20 @@
-﻿using GraphX.Common.Enums;
-using GraphX.Common.Interfaces;
-using GraphX.Controls.Models;
-using GraphX.Logic.Models;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using Router.Enums;
-using Router.Interfaces;
 using Router.Model;
 using System;
-using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Xml.Linq;
 
 namespace Router.ViewModels
 {
-    public class GraphViewModel : BindableBase, IGraphViewModel
+    public class GraphViewModel : BindableBase
     {
         #region [Fields and Properties]
         private PendingLink _pendingLink;
-        public IGXLogicCore<Node, Link, Network> LogicCore { get; private set; }
+        public Network Network { get; private set; }
         #region [Commands and Events]
         public DelegateCommand Initialize { get; private set; }
-        public DelegateCommand<VertexSelectedEventArgs> NodeSelected { get; private set; }
-        public DelegateCommand<MouseButtonEventArgs> CanvasInteraction { get; private set; }
+        public DelegateCommand AddVertex { get; private set; }
 
         public event Action<GraphMode> GraphModeChanged;
         public event Action<Node, Point> NodeRequested;
@@ -33,9 +23,12 @@ namespace Router.ViewModels
         public event Action<PendingLink> PendingLinkCompleted;
         #endregion
         #region [Observables]
-        public ObservableCollection<Node> Nodes { get; private set; } = new ObservableCollection<Node>();
-        public ObservableCollection<Link> Links { get; private set; } = new ObservableCollection<Link>();
-
+        private int _vertexCount;
+        public int VertexCount
+        {
+            get => _vertexCount;
+            set => SetProperty(ref _vertexCount, value);
+        }
         private dynamic _selectedElement;
         public dynamic SelectedElement
         {
@@ -82,95 +75,40 @@ namespace Router.ViewModels
         #endregion
         public GraphViewModel()
         {
-            LogicCore = new GXLogicCore<Node, Link, Network>(new Network())
-            {
-                DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK,
-                DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA,
-                DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER,
-                EnableParallelEdges = true,
-                ParallelEdgeDistance = 25,
-            };
-            LogicCore.DefaultOverlapRemovalAlgorithmParams = LogicCore.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
-            LogicCore.DefaultOverlapRemovalAlgorithmParams.HorizontalGap = 50;
-            LogicCore.DefaultOverlapRemovalAlgorithmParams.VerticalGap = 50;
-
+            Network = new Network();
             Mode = GraphMode.Select;
             NodeMode = NodeType.Terminal;
             LinkMode = LinkType.Simplex;
 
-            NodeSelected = new DelegateCommand<VertexSelectedEventArgs>(OnNodeSelected);
-            CanvasInteraction = new DelegateCommand<MouseButtonEventArgs>(OnCanvasInteraction);
-        }
-
-        private void OnCanvasInteraction(MouseButtonEventArgs e)
-        {
-            if (e.LeftButton != MouseButtonState.Pressed) return;
-
-            switch (Mode)
+            Network.VertexAdded += (n) =>
             {
-                case GraphMode.Select:
-                    InDrawerViewMode = false;
-                    break;
-                case GraphMode.Edit:
-                    var pos = e.GetPosition((UIElement)e.Source);
-                    var node = AddNode($"#{Nodes.Count + 1} Node", NodeMode);
+                VertexCount = Network.VertexCount;
+            };
 
-                    NodeRequested.Invoke(node, pos);
-                    SelectedElement = node;
-                    InDrawerViewMode = true;
-                    break;
-            }
-        }
-
-        private void OnNodeSelected(VertexSelectedEventArgs e)
-        {
-            if (e.MouseArgs.LeftButton != MouseButtonState.Pressed) return;
-
-            switch (Mode)
+            AddVertex = new DelegateCommand(() =>
             {
-                case GraphMode.Select:
-                    SelectedElement = e.VertexControl.GetDataVertex<Node>();
-                    InDrawerViewMode = true;
-                    break;
-                case GraphMode.Edit:
-                    var pos = e.MouseArgs.GetPosition((IInputElement)e.VertexControl.Parent);
-                    if (_pendingLink != default)
-                    {
-                        _pendingLink.SetTarget(e.VertexControl);
-                        // prevent self-loop
-                        if (_pendingLink.Source.ID == _pendingLink.Target.ID) return;
-                        PendingLinkCompleted?.Invoke(_pendingLink);
-
-                        var link = AddLink(_pendingLink.Source, _pendingLink.Target, 100, LinkMode);
-                        LinkRequested?.Invoke(link);
-                        _pendingLink = null;
-
-                        SelectedElement = link;
-                        InDrawerViewMode = true;
-                    }
-                    else
-                    {
-                        _pendingLink = new PendingLink(e.VertexControl, pos.X, pos.Y, new SolidColorBrush(Colors.Blue));
-                        PendingLinkRequested?.Invoke(_pendingLink);
-                    }
-                    break;
-            }
+                InDrawerViewMode = true;
+                SelectedElement = AddNode($"#{Network.VertexCount + 1} Node", NodeMode);
+            }, () =>
+            {
+                return Mode == GraphMode.Edit;
+            });
         }
 
         private Node AddNode(string name, NodeType type)
         {
-            var node = new Node(name, type);
-            Nodes.Add(node);
-
-            return node;
+            var n = new Node(Guid.NewGuid(), name, type);
+            if (Network.AddVertex(n))
+                return n;
+            return null;
         }
 
         private Link AddLink(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
         {
-            var link = Link.Create(source, target, weight, linkType, fiberType);
-            Links.Add(link);
-
-            return link;
+            var l = Link.Create(source, target, weight, linkType, fiberType);
+            if (Network.AddEdge(l))
+                return l;
+            return null;
         }
     }
 }

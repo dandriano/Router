@@ -1,4 +1,4 @@
-﻿using GraphX.Common.Models;
+﻿using QuikGraph;
 using Router.Enums;
 using System;
 using System.Windows;
@@ -8,7 +8,7 @@ namespace Router.Model
     /// <summary>
     /// Physical link as a fiber span between network nodes/circuit-packs
     /// </summary>
-    public class Link : EdgeBase<Node>
+    public class Link : EquatableTaggedEdge<Node, double>
     {
         public static Link Create(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
         {

@@ -1,27 +1,23 @@
-﻿using GraphX.Common.Models;
-using Router.Enums;
+﻿using Router.Enums;
+using Router.Interfaces;
+using System;
 
 namespace Router.Model
 {
     /// <summary>
     /// Representation of a network node on a graph
     /// </summary>
-    public class Node : VertexBase
+    public class Node : IVertex
     {
+        public Guid Id { get; private set; }
         public string Name { get; set; }
         public NodeType Type { get; set; }
         public bool IsInRoute { get; set; }
         public bool IsOutRoute { get; set; }
 
-        public Node(string name, NodeType type = NodeType.Terminal) : base()
+        public Node(Guid id, string name, NodeType type = NodeType.Terminal)
         {
-            Name = name;
-            Type = type;
-        }
-
-        public Node(long id, string name, NodeType type = NodeType.Terminal)
-        {
-            ID = id;
+            Id = id;
             Name = name;
             Type = type;
         }

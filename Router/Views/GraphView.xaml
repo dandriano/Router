@@ -3,11 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:e="clr-namespace:Router.Enums"
              xmlns:c="clr-namespace:Router.Controls"
-             xmlns:v="clr-namespace:Router.Views"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -69,20 +67,11 @@
             <m:DrawerHost.RightDrawerContent>
                 <ContentPresenter Content="{Binding SelectedElement}"/>
             </m:DrawerHost.RightDrawerContent>
-            <c:CanvasControl ViewFinderVisibility="Collapsed">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseDown">
-                        <prism:InvokeCommandAction Command="{Binding CanvasInteraction}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <c:GraphAreaControl >
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="VertexSelected">
-                            <prism:InvokeCommandAction Command="{Binding NodeSelected}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </c:GraphAreaControl>
-            </c:CanvasControl>
+            <c:GraphAreaControl Height="500" 
+                                State="{Binding Network.State}"
+                                Settings="{Binding Network.Settings}" 
+                                VertexRequested="{Binding AddVertex}"/>
+
         </m:DrawerHost>
 
         <StackPanel Grid.Row="2"
@@ -92,14 +81,14 @@
                 <StatusBarItem>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Node count:    "/>
-                        <TextBlock Text="{Binding Nodes.Count}"/>
+                        <TextBlock Text="{Binding VertexCount}"/>
                     </StackPanel>
                 </StatusBarItem>
                 <Separator />
                 <StatusBarItem>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Link count:    "/>
-                        <TextBlock Text="{Binding Links.Count}"/>
+                        <TextBlock Text="{Binding Network.EdgeCount}"/>
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>
