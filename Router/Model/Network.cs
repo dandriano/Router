@@ -16,8 +16,17 @@ namespace Router.Model
         public Network()
         {
             Settings.BackgroundColor = new Color4(150, 150, 150, 0);
-
+            
             State = new CartesianGraphState<IVertex>(Settings);
+
+            State.XGridSpacing.Automatic = false;
+            State.XGridSpacing.Major = 1;
+            State.XGridSpacing.Minor = 0.5f;
+
+            State.YGridSpacing.Automatic = false;
+            State.YGridSpacing.Major = 1;
+            State.YGridSpacing.Minor = 0.5f;
+
             State.AddSeries(SeriesType.Point, "VERTICES");
             State.AddSeries(SeriesType.Line, "EDGES");
         }
