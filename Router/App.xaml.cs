@@ -1,28 +1,29 @@
-﻿using Prism.DryIoc;
-using Prism.Ioc;
-using Prism.Mvvm;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Router.ViewModels;
-using Router.Views;
 using System.Windows;
 
 namespace Router
 {
-    public partial class App : PrismApplication
+    public partial class App : Application
     {
-        protected override Window CreateShell()
+        protected override void OnStartup(StartupEventArgs e)
         {
-            return Container.Resolve<MainWindow>();
+            base.OnStartup(e);
+
+            RegisterServices();
+            var mainWindow = new MainWindow();
+
+            mainWindow.Show();
         }
 
-        protected override void ConfigureViewModelLocator()
+        private void RegisterServices()
         {
-            base.ConfigureViewModelLocator();
-
-            ViewModelLocationProvider.Register<GraphView, GraphViewModel>();
-        }
-
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
+            Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                    .AddTransient<GraphViewModel>()
+                    .BuildServiceProvider()
+            );
         }
     }
 }

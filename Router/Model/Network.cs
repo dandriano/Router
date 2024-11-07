@@ -12,11 +12,11 @@ namespace Router.Model
     {
         public CartesianGraphSettings Settings { get; } = CartesianGraphSettings.Default;
         public CartesianGraphState<IVertex> State { get; }
-       
+
         public Network()
         {
             Settings.BackgroundColor = new Color4(150, 150, 150, 0);
-            
+
             State = new CartesianGraphState<IVertex>(Settings);
 
             State.XGridSpacing.Automatic = false;

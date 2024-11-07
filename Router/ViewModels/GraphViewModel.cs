@@ -1,26 +1,22 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Router.Enums;
 using Router.Model;
 using System;
-using System.Windows;
 
 namespace Router.ViewModels
 {
-    public class GraphViewModel : BindableBase
+    public class GraphViewModel : ObservableObject
     {
         #region [Fields and Properties]
-        private PendingLink _pendingLink;
         public Network Network { get; private set; }
         #region [Commands and Events]
-        public DelegateCommand Initialize { get; private set; }
-        public DelegateCommand AddVertex { get; private set; }
-
+        public RelayCommand AddVertex { get; private set; }
+        /*
         public event Action<GraphMode> GraphModeChanged;
         public event Action<Node, Point> NodeRequested;
         public event Action<Link> LinkRequested;
-        public event Action<PendingLink> PendingLinkRequested;
-        public event Action<PendingLink> PendingLinkCompleted;
+        */
         #endregion
         #region [Observables]
         private int _vertexCount;
@@ -40,15 +36,18 @@ namespace Router.ViewModels
         public GraphMode Mode
         {
             get => _mode;
-            set => SetProperty(ref _mode, value, () =>
-            {
-                if (value != GraphMode.Edit && _pendingLink != default)
+            set => SetProperty(ref _mode, value);
+            /*
+             * () =>
                 {
-                    PendingLinkCompleted?.Invoke(_pendingLink);
-                    _pendingLink = null;
+                    if (value != GraphMode.Edit && _pendingLink != default)
+                    {
+                        PendingLinkCompleted?.Invoke(_pendingLink);
+                        _pendingLink = null;
+                    }
+                    GraphModeChanged?.Invoke(value);
                 }
-                GraphModeChanged?.Invoke(value);
-            });
+             */
         }
 
         private NodeType _nodeMode;
@@ -85,7 +84,7 @@ namespace Router.ViewModels
                 VertexCount = Network.VertexCount;
             };
 
-            AddVertex = new DelegateCommand(() =>
+            AddVertex = new RelayCommand(() =>
             {
                 InDrawerViewMode = true;
                 SelectedElement = AddNode($"#{Network.VertexCount + 1} Node", NodeMode);
@@ -98,17 +97,18 @@ namespace Router.ViewModels
         private Node AddNode(string name, NodeType type)
         {
             var n = new Node(Guid.NewGuid(), name, type);
-            if (Network.AddVertex(n))
-                return n;
-            return null;
+            if (!Network.AddVertex(n))
+                throw new InvalidOperationException();
+            return n;
         }
 
         private Link AddLink(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
         {
             var l = Link.Create(source, target, weight, linkType, fiberType);
-            if (Network.AddEdge(l))
-                return l;
-            return null;
+            if (!Network.AddEdge(l))
+                throw new InvalidOperationException();
+
+            return l;
         }
     }
 }

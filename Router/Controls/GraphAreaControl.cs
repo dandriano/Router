@@ -40,7 +40,7 @@ namespace Router.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-           
+
             var settings = new GLWpfControlSettings();
             _control = new GLWpfControl();
             _control.Ready += OnReady;
