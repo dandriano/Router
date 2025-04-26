@@ -1,0 +1,35 @@
+﻿@page "/"
+
+@using Blazorex
+@using Router
+
+<MudPaper>
+    <Canvas Width="@_width" Height="@_height" OnFrameReady="(t) => OnFrameReady(t)" OnCanvasReady="(ctx) => OnCanvasReady(ctx)"/>
+</MudPaper>
+
+@code {
+    private int _width = 800;
+    private int _height = 600;
+    private float _lastUpdate = 0;
+    private float _elapsedTime = 0;
+    private IRenderContext? _ctx;
+    private Network _network = new Network();
+
+    private void OnCanvasReady(CanvasBase canvas)
+    {
+        _ctx = canvas.RenderContext;
+    }
+
+    private void OnFrameReady(float timestamp)
+    {
+        _ctx!.ClearRect(0, 0, _width, _height);
+
+        _elapsedTime = timestamp - _lastUpdate;
+        _lastUpdate = timestamp;
+
+        var fps = 1000f / _elapsedTime;
+        _ctx.Font = "12px verdana";
+        _ctx.FillStyle = "grey";
+        _ctx.FillText($"FPS: {fps:f2}", 20, 40);
+    }
+}
