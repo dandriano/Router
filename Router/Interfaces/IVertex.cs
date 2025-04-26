@@ -5,6 +5,6 @@ namespace Router.Interfaces
     public interface IVertex
     {
         Guid Id { get; }
-        string Name { get; set; }
+        string Name { get; }
     }
 }

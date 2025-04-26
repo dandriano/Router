@@ -1,14 +1,14 @@
 ﻿using QuikGraph;
 using Router.Enums;
+using Router.Interfaces;
 using System;
-using System.Windows;
 
-namespace Router.Model
+namespace Router
 {
     /// <summary>
     /// Physical link as a fiber span between network nodes/circuit-packs
     /// </summary>
-    public class Link : EquatableTaggedEdge<Node, double>
+    public class Link : EquatableTaggedEdge<IVertex, double>, ILink
     {
         public static Link Create(Node source, Node target, long weight, LinkType linkType, FiberType fiberType = FiberType.SSMF)
         {
@@ -20,11 +20,10 @@ namespace Router.Model
 
             return forward;
         }
-
+        public Guid Id { get; init; } = Guid.NewGuid();
         public LinkType Type { get; private set; }
-        public FiberType FiberType { get; set; }
-        public Link BackwardLink { get; private set; }
-        public Visibility SourcePointerVisibility => Type == LinkType.Duplex ? Visibility.Visible : Visibility.Collapsed;
+        public FiberType FiberType { get; private set; }
+        public Link? BackwardLink { get; private set; }
 
         protected Link(Node source, Node target, long weight, FiberType fiberType = FiberType.SSMF) : base(source, target, weight)
         {
@@ -34,7 +33,8 @@ namespace Router.Model
 
         private void SetPair(Link backward, LinkType linkType)
         {
-            if (Type == linkType) throw new Exception($"Already {linkType}");
+            if (Type == linkType) 
+                throw new Exception($"Already {linkType}");
 
             BackwardLink = backward;
             Type = linkType;
