@@ -1,13 +1,25 @@
 ﻿@page "/"
 
 @using Blazorex
-@using Router
+@using Router.Enums
 
+<MudToolBar>
+    <MudToggleGroup T="Enums.GraphMode" @bind-Value="_graphMode">
+        @foreach (var enumValue in Enum.GetValues<Enums.GraphMode>())
+        {
+            <MudToggleItem Value="enumValue" Key="@enumValue">
+                @enumValue.ToString()
+            </MudToggleItem>
+        }
+    </MudToggleGroup>
+</MudToolBar>
 <MudPaper>
     <Canvas Width="@_width" Height="@_height" OnFrameReady="(t) => OnFrameReady(t)" OnCanvasReady="(ctx) => OnCanvasReady(ctx)"/>
 </MudPaper>
+<MudText Typo="Typo.caption">FPS: @((int)(_elapsedTime > 0 ? 1000f / _elapsedTime : 0))</MudText>
 
 @code {
+    private GraphMode _graphMode;
     private int _width = 800;
     private int _height = 600;
     private float _lastUpdate = 0;
@@ -22,14 +34,13 @@
 
     private void OnFrameReady(float timestamp)
     {
-        _ctx!.ClearRect(0, 0, _width, _height);
+        // TODO: clear frame if needed
+        // _ctx!.ClearRect(0, 0, _width, _height);
 
+        // update time stamps
         _elapsedTime = timestamp - _lastUpdate;
         _lastUpdate = timestamp;
 
-        var fps = 1000f / _elapsedTime;
-        _ctx.Font = "12px verdana";
-        _ctx.FillStyle = "grey";
-        _ctx.FillText($"FPS: {fps:f2}", 20, 40);
+        // TODO: proceed/draw requests to (re)place graph entities
     }
 }
