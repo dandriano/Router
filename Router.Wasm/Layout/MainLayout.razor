@@ -1,20 +1,21 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider  @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
 <MudPopoverProvider/>
 
 <MudLayout>
-    <MudAppBar Elevation="1" Color="Color.Primary">
+    <MudAppBar>
         <MudText Typo="Typo.h6">Router</MudText>
         <MudSpacer />
         <MudSwitch T="bool"
                     @bind-Value="_isDarkMode"
-                    Color="Color.Secondary"
                     ThumbIcon="@(_isDarkMode ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode)" />
     </MudAppBar>  
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-            @Body
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            <CascadingValue Value="_theme">
+                @Body
+            </CascadingValue>
         </MudContainer>
     </MudMainContent>
 </MudLayout>

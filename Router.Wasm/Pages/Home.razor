@@ -3,46 +3,66 @@
 @using Blazorex
 @using Router.Enums
 
-<MudToolBar>
-    <MudToggleGroup T="Enums.GraphMode" @bind-Value="_graphMode">
-        @foreach (var enumValue in Enum.GetValues<Enums.GraphMode>())
-        {
-            <MudToggleItem Value="enumValue" Key="@enumValue">
-                @enumValue.ToString()
-            </MudToggleItem>
-        }
-    </MudToggleGroup>
-</MudToolBar>
-<MudPaper>
-    <Canvas Width="@_width" Height="@_height" OnFrameReady="(t) => OnFrameReady(t)" OnCanvasReady="(ctx) => OnCanvasReady(ctx)"/>
-</MudPaper>
-<MudText Typo="Typo.caption">FPS: @((int)(_elapsedTime > 0 ? 1000f / _elapsedTime : 0))</MudText>
+<MudStack>
+    <MudToolBar>
+        <MudToggleGroup T="Enums.GraphMode" @bind-Value="_graphMode">
+            @foreach (var enumValue in Enum.GetValues<Enums.GraphMode>())
+            {
+                <MudToggleItem Value="enumValue">
+                    @enumValue.ToString()
+                </MudToggleItem>
+            }
+        </MudToggleGroup>
+    </MudToolBar>
+    <Canvas OnFrameReady="(t) => OnFrameReady(t)" 
+            OnCanvasReady="(ctx) => OnCanvasReady(ctx)"
+            OnResize="(s) => OnResize(s)"/>
+    <MudText Typo="Typo.caption">FPS: @((int)(_elapsedTime > 0 ? 1000f / _elapsedTime : 0))    
+                                    Size: @(_settings?.Width ?? 0) X @(_settings?.Height ?? 0)</MudText>
+</MudStack>
+
 
 @code {
+    [CascadingParameter]
+    public MudTheme? Theme { get; init; }       // ugly..
     private GraphMode _graphMode;
-    private int _width = 800;
-    private int _height = 600;
     private float _lastUpdate = 0;
     private float _elapsedTime = 0;
+    private bool _hasChanges = true;
     private IRenderContext? _ctx;
-    private Network _network = new Network();
-    private NetworkRenderer _renderer = new NetworkRenderer(NetworkSettings.Default);
+    private Network? _network;
+    private NetworkSettings? _settings;
+    private NetworkRenderer? _renderer;
 
     private void OnCanvasReady(CanvasBase canvas)
     {
         _ctx = canvas.RenderContext;
+        _network = new Network();
+
+        _settings = NetworkSettings.Default;
+        _settings.SetSize(canvas.Width, canvas.Height);
+        _settings.SetColour(Theme!.PaletteDark.Black.Value, Theme.PaletteDark.Background.Value);
+
+        _renderer = new NetworkRenderer(_settings);
+    }
+    private void OnResize(Blazorex.Size size) 
+    {
+        /*
+        _settings!.SetSize(size.Width, size.Height);
+        _hasChanges = true;
+        */
     }
 
     private void OnFrameReady(float timestamp)
     {
-        // TODO: clear frame if needed
-        // _ctx!.ClearRect(0, 0, _width, _height);
-
         // update time stamps
         _elapsedTime = timestamp - _lastUpdate;
         _lastUpdate = timestamp;
 
-        // TODO: proceed/draw requests to (re)place graph entities
-        // _renderer.Render(_ctx, _network);
+        if (!_hasChanges)
+            return;
+
+        _renderer!.Render(_ctx!, _network!);
+        _hasChanges = false;
     }
 }
