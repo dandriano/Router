@@ -33,7 +33,7 @@ namespace Router
 
         private void SetPair(Link backward, LinkType linkType)
         {
-            if (Type == linkType) 
+            if (Type == linkType)
                 throw new Exception($"Already {linkType}");
 
             BackwardLink = backward;

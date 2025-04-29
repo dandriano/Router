@@ -26,6 +26,7 @@
     private float _elapsedTime = 0;
     private IRenderContext? _ctx;
     private Network _network = new Network();
+    private NetworkRenderer _renderer = new NetworkRenderer(NetworkSettings.Default);
 
     private void OnCanvasReady(CanvasBase canvas)
     {
@@ -42,5 +43,6 @@
         _lastUpdate = timestamp;
 
         // TODO: proceed/draw requests to (re)place graph entities
+        // _renderer.Render(_ctx, _network);
     }
 }

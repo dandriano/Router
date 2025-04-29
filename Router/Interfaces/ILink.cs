@@ -1,5 +1,5 @@
-using System;
 using QuikGraph;
+using System;
 
 namespace Router.Interfaces
 {
