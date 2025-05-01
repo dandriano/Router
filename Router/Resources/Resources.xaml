@@ -1,7 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Resources/Styles/Node.xaml"/>
-        <ResourceDictionary Source="/Resources/Styles/Link.xaml"/>
-        <ResourceDictionary Source="/Resources/Styles/Misc.xaml"/>
-    </ResourceDictionary.MergedDictionaries>
-</ResourceDictionary>
