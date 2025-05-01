@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazorex" Version="1.1.3" />
+    <PackageReference Include="Blazorex" Version="1.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
     <PackageReference Include="MudBlazor" Version="8.5.1" />
