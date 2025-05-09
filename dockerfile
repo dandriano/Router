@@ -1,6 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
 WORKDIR /source
 COPY . .
+
+RUN apt update && apt install python3 -y
+
+RUN dotnet workload install wasm-tools
 RUN dotnet publish Router.Wasm -c Release -p:PublishTrimmed=true -o /app
 
 FROM busybox:stable as runtime
