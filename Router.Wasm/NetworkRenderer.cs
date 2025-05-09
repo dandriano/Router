@@ -21,7 +21,7 @@ namespace Router.Wasm
         {
             // TODO: to implement (as extensions to IRenderContext or as private methods right here..)
             ctx.DrawGrid(_settings);
-            // ctx.DrawVerticies(network.Verticies)
+            ctx.DrawVertices(network);
             // ctx.DrawEdges(network.Edges)
         }
     }

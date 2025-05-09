@@ -1,5 +1,7 @@
 ﻿using QuikGraph;
 using Router.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Router
 {
@@ -8,7 +10,9 @@ namespace Router
     /// </summary>
     public class Network : BidirectionalGraph<IVertex, Link>
     {
-        public override bool AddVertex(IVertex vertex)
+        public Dictionary<Guid, (float x, float y)> VerticesMap { get; init; } = [];
+
+        public bool AddVertex(IVertex vertex, float x, float y)
         {
             /*
             // rescale into view co-ordinates
@@ -22,7 +26,8 @@ namespace Router
             var worldPos = (new Vector4(x, -y, 0, 1) * vpMat).Xy;
             State.Series[0].Add(vertex, worldPos.X, worldPos.Y);
             */
-            return base.AddVertex(vertex);
+            VerticesMap.Add(vertex.Id, (x, y));
+            return AddVertex(vertex);
         }
     }
 }

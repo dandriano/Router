@@ -61,33 +61,41 @@
 
     private void OnMouseWheel(WheelDelta d) 
     {
+        /* TODO: implement scale
         var newScale = _scale + (float)d.DeltaY * -0.001f;
     
         _x = (float)d.ClientX - ((float)d.ClientX - _x) * (newScale / _scale);
         _y = (float)d.ClientY - ((float)d.ClientY - _y) * (newScale / _scale);
         _scale = newScale;
+        */
     }
 
     private void OnMouseDown(MouseButtonData m) => _isMouseDown = true;
-    private void OnMouseUp(MouseButtonData m) => _isMouseDown = false;
+    private void OnMouseUp(MouseButtonData m) 
+    {
+        _isMouseDown = false;
+
+        _network!.AddVertex(new Node($"{_x:f2}\t{_y:f2}"), _x, _y);
+        _hasChanges = true;
+    }
 
     private void OnMouseMove(MouseCoords c)
     {
-        if (!_isMouseDown)
-            return;
+        // TODO: implement pan
+        //if (!_isMouseDown)
+        //    return;
 
+        // _hasChanges = true;
         _x += (float)c.ClientX - _cx;
         _y += (float)c.ClientY - _cy;
 
         _cx = (float)c.ClientX;
         _cy = (float)c.ClientY;
-
-        // _hasChanges = true;
     }
 
     private void OnResize(Blazorex.Size size) 
     {
-        /*
+        /* TODO: implement reaction on resize
         _settings!.SetSize(size.Width, size.Height);
         _hasChanges = true;
         */
@@ -102,7 +110,7 @@
         if (!_hasChanges)
             return;
 
-        _renderer!.Render(_ctx!, _network!);
         _hasChanges = false;
+        _renderer!.Render(_ctx!, _network!);
     }
 }
