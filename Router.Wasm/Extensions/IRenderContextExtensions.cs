@@ -88,7 +88,7 @@ namespace Router.Wasm.Extensions
         /// <param name="cy">The Y coordinate of the ellipse center.</param>
         /// <param name="rx">The radius of the ellipse along the X axis.</param>
         /// <param name="ry">The radius of the ellipse along the Y axis.</param>
-        /// <param name="colour">Colour stroke.</param>
+        /// <param name="colour">The colour of the stroke.</param>
         /// <param name="segments">The number of line segments used to approximate the ellipse. Higher means smoother.</param>
         public static void StrokeEllipse(this IRenderContext ctx, float cx, float cy, float rx, float ry, string colour = "black", int segments = 100)
         {
@@ -119,7 +119,7 @@ namespace Router.Wasm.Extensions
         /// <param name="cy">The Y coordinate of the ellipse center.</param>
         /// <param name="rx">The radius of the ellipse along the X axis.</param>
         /// <param name="ry">The radius of the ellipse along the Y axis.</param>
-        /// <param name="colour">Colour stroke.</param>
+        /// <param name="colour">The colour of the stroke.</param>
         public static void FillEllipse(this IRenderContext ctx, float cx, float cy, float rx, float ry, string colour = "black")
         {
             // bounding rectangle
@@ -162,7 +162,7 @@ namespace Router.Wasm.Extensions
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="network"></param>
-        public static void DrawVertices(this IRenderContext ctx, Network network)
+        public static void DrawVertices(this IRenderContext ctx, Network network, NetworkSettings settings)
         {
             foreach (var v in network.Vertices)
             {
@@ -171,8 +171,8 @@ namespace Router.Wasm.Extensions
 
                 // network.VerticesMap.Remove(v.Id);
 
-                ctx.FillEllipse(coords.x, coords.y, 5, 5, "red");
-                ctx.StrokeEllipse(coords.x, coords.y, 5, 5, "green");
+                ctx.FillEllipse(coords.x, coords.y, 5, 5, settings.VertexBgColour);
+                ctx.StrokeEllipse(coords.x, coords.y, 5, 5, settings.VertexFgColour);
             }
         }
     }

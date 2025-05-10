@@ -14,7 +14,8 @@
             }
         </MudToggleGroup>
     </MudToolBar>
-    <Canvas OnFrameReady="(t) => OnFrameReady(t)" 
+    <Canvas Width="@_width" Height="@_height"
+            OnFrameReady="(t) => OnFrameReady(t)" 
             OnCanvasReady="(ctx) => OnCanvasReady(ctx)"
             OnMouseDown="(m) => OnMouseDown(m)"
             OnMouseUp="(m) => OnMouseUp(m)"
@@ -38,11 +39,11 @@
     private Network? _network;
     private NetworkSettings? _settings;
     private NetworkRenderer? _renderer;
+    private int _width = 800;
+    private int _height = 600;
     //--- pan and scale
     private float _x;
     private float _y;
-    private float _cx;
-    private float _cy;
     private float _scale;
     private bool _isMouseDown;
     //---
@@ -53,9 +54,10 @@
         _network = new Network();
 
         _settings = NetworkSettings.Default;
-        _settings.SetSize(canvas.Width, canvas.Height);
+        _settings.SetSize(_width, _height);
         _settings.SetColour(Theme!.PaletteDark.Black.Value, Theme.PaletteDark.Background.Value);
-
+        _settings.SetVertexColour(Theme.PaletteDark.Primary.Value, Theme.PaletteDark.Background.Value);
+        
         _renderer = new NetworkRenderer(_settings);
     }
 
@@ -75,22 +77,22 @@
     {
         _isMouseDown = false;
 
+        if(_graphMode != GraphMode.Edit)
+            return;
+
         _network!.AddVertex(new Node($"{_x:f2}\t{_y:f2}"), _x, _y);
         _hasChanges = true;
     }
 
     private void OnMouseMove(MouseCoords c)
     {
+        _x = (float)c.OffsetX;
+        _y = (float)c.OffsetY;
+
+        if (_graphMode != GraphMode.Select || !_isMouseDown)
+            return;
+
         // TODO: implement pan
-        //if (!_isMouseDown)
-        //    return;
-
-        // _hasChanges = true;
-        _x += (float)c.ClientX - _cx;
-        _y += (float)c.ClientY - _cy;
-
-        _cx = (float)c.ClientX;
-        _cy = (float)c.ClientY;
     }
 
     private void OnResize(Blazorex.Size size) 
