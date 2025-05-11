@@ -23,8 +23,8 @@
             OnMouseWheel="(d) => OnMouseWheel(d)"
             OnResize="(s) => OnResize(s)" />
     <MudText Typo="Typo.caption">FPS: @((int)(_elapsedTime > 0 ? 1000f / _elapsedTime : 0))    
-                                    Size: @(_settings?.Width ?? 0) X @(_settings?.Height ?? 0)
-                                        Coord: @(_x) X @(_y)</MudText>
+                                    Size: @_width X @_height
+                                        Coord: @_x/@_xc X @_y/@_yc</MudText>
 </MudStack>
 
 
@@ -44,6 +44,8 @@
     //--- pan and scale
     private float _x;
     private float _y;
+    private float _xc;
+    private float _yc;
     private float _scale;
     private bool _isMouseDown;
     //---
@@ -88,6 +90,9 @@
     {
         _x = (float)c.OffsetX;
         _y = (float)c.OffsetY;
+
+        _xc = _x - _width / 2;
+        _yc = -(_y - _height / 2);
 
         if (_graphMode != GraphMode.Select || !_isMouseDown)
             return;
