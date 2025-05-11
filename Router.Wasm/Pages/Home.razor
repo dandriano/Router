@@ -14,11 +14,17 @@
             }
         </MudToggleGroup>
     </MudToolBar>
-    <Canvas OnFrameReady="(t) => OnFrameReady(t)" 
+    <Canvas Width="@_width" Height="@_height"
+            OnFrameReady="(t) => OnFrameReady(t)" 
             OnCanvasReady="(ctx) => OnCanvasReady(ctx)"
-            OnResize="(s) => OnResize(s)"/>
+            OnMouseDown="(m) => OnMouseDown(m)"
+            OnMouseUp="(m) => OnMouseUp(m)"
+            OnMouseMove="(c) => OnMouseMove(c)"
+            OnMouseWheel="(d) => OnMouseWheel(d)"
+            OnResize="(s) => OnResize(s)" />
     <MudText Typo="Typo.caption">FPS: @((int)(_elapsedTime > 0 ? 1000f / _elapsedTime : 0))    
-                                    Size: @(_settings?.Width ?? 0) X @(_settings?.Height ?? 0)</MudText>
+                                    Size: @_width X @_height
+                                        Coord: @_x/@_xc X @_y/@_yc</MudText>
 </MudStack>
 
 
@@ -33,6 +39,16 @@
     private Network? _network;
     private NetworkSettings? _settings;
     private NetworkRenderer? _renderer;
+    private int _width = 800;
+    private int _height = 600;
+    //--- pan and scale
+    private float _x;
+    private float _y;
+    private float _xc;
+    private float _yc;
+    private float _scale;
+    private bool _isMouseDown;
+    //---
 
     private void OnCanvasReady(CanvasBase canvas)
     {
@@ -40,14 +56,53 @@
         _network = new Network();
 
         _settings = NetworkSettings.Default;
-        _settings.SetSize(canvas.Width, canvas.Height);
+        _settings.SetSize(_width, _height);
         _settings.SetColour(Theme!.PaletteDark.Black.Value, Theme.PaletteDark.Background.Value);
-
+        _settings.SetVertexColour(Theme.PaletteDark.Primary.Value, Theme.PaletteDark.Background.Value);
+        
         _renderer = new NetworkRenderer(_settings);
     }
+
+    private void OnMouseWheel(WheelDelta d) 
+    {
+        /* TODO: implement scale
+        var newScale = _scale + (float)d.DeltaY * -0.001f;
+    
+        _x = (float)d.ClientX - ((float)d.ClientX - _x) * (newScale / _scale);
+        _y = (float)d.ClientY - ((float)d.ClientY - _y) * (newScale / _scale);
+        _scale = newScale;
+        */
+    }
+
+    private void OnMouseDown(MouseButtonData m) => _isMouseDown = true;
+    private void OnMouseUp(MouseButtonData m) 
+    {
+        _isMouseDown = false;
+
+        if(_graphMode != GraphMode.Edit)
+            return;
+
+        _network!.AddVertex(new Node($"{_x:f2}\t{_y:f2}"), _x, _y);
+        _hasChanges = true;
+    }
+
+    private void OnMouseMove(MouseCoords c)
+    {
+        _x = (float)c.OffsetX;
+        _y = (float)c.OffsetY;
+
+        _xc = _x - _width / 2;
+        _yc = -(_y - _height / 2);
+
+        if (_graphMode != GraphMode.Select || !_isMouseDown)
+            return;
+
+        // TODO: implement pan
+    }
+
     private void OnResize(Blazorex.Size size) 
     {
-        /*
+        /* TODO: implement reaction on resize
         _settings!.SetSize(size.Width, size.Height);
         _hasChanges = true;
         */
@@ -62,7 +117,7 @@
         if (!_hasChanges)
             return;
 
-        _renderer!.Render(_ctx!, _network!);
         _hasChanges = false;
+        _renderer!.Render(_ctx!, _network!);
     }
 }
