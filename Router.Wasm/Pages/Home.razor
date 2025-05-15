@@ -82,6 +82,9 @@
         if(_graphMode != GraphMode.Edit)
             return;
 
+        _x = (float)m.OffsetX;
+        _y = (float)m.OffsetY;
+
         _network!.AddVertex(new Node($"{_x:f2}\t{_y:f2}"), _x, _y);
         _hasChanges = true;
     }

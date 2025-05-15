@@ -1,0 +1,3 @@
+[submodule "Blazorex"]
+	path = Blazorex
+	url = https://github.com/dandriano/Blazorex.git
