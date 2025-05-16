@@ -4,17 +4,19 @@ WORKDIR /source
 # RUN apt update && apt install python3 -y
 # RUN dotnet workload install wasm-tools
 
+COPY Blazorex/readme.md ./Blazorex/readme.md
+COPY Blazorex/src/Blazorex/*.csproj ./Blazorex/src/Blazorex/ 
 COPY Router/*.csproj ./Router/
 COPY Router.Wasm/*.csproj ./Router.Wasm/
 RUN dotnet restore Router.Wasm
 
+COPY Blazorex/src/Blazorex/. ./Blazorex/src/Blazorex
 COPY Router/. ./Router/
 COPY Router.Wasm/. ./Router.Wasm/
 RUN dotnet publish Router.Wasm -c Release -p:PublishTrimmed=true -o /app
 
-FROM busybox:stable as runtime
-WORKDIR /www
-COPY --from=build /app/wwwroot .
+FROM nginx:alpine AS runtime
+COPY --from=build /app/wwwroot /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
-CMD ["httpd", "-f", "-p", "80", "-h", "/www"]
